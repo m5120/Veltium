@@ -1,0 +1,162 @@
+{
+  "key.optimizationmod.config": "Відкрити налаштування",
+  "category.optimizationmod": "Veltium",
+
+  "text.optimizationmod.config.title": "Налаштування Veltium",
+
+  "text.optimizationmod.enabled": "Увімкнено",
+  "text.optimizationmod.disabled": "Вимкнено",
+  "text.optimizationmod.yes": "Так",
+  "text.optimizationmod.no": "Ні",
+
+  "text.optimizationmod.hud.fps": "%d к/с",
+  "text.optimizationmod.hud.fps_stats": "%d к/с (min%d avg%d max%d)",
+  "text.optimizationmod.hud.memory": "Пам'ять: %dМБ/%dМБ (%d%%)",
+  "text.optimizationmod.hud.memory_stats": "Пам'ять: %s%% (min%s avg%s max%s)",
+  "text.optimizationmod.hud.ping": "Пінг: %dмс",
+  "text.optimizationmod.hud.ping_stats": "Пінг: %dмс (min%d avg%d max%d)",
+  "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
+  "text.optimizationmod.hud.time": "%s",
+
+  "text.optimizationmod.category.hud": "Налаштування HUD",
+  "text.optimizationmod.category.hud.tooltip": "Налаштування відображення інформації на екрані",
+
+  "text.optimizationmod.category.mod_settings": "Налаштування мода",
+  "text.optimizationmod.category.mod_settings.tooltip": "Основні налаштування роботи мода",
+
+  "text.optimizationmod.category.coordinate_colors": "Кольори координат",
+
+  "text.optimizationmod.separator.hud_elements": "Елементи HUD",
+  "text.optimizationmod.separator.advanced_stats": "Розширена статистика",
+  "text.optimizationmod.separator.size_position": "Розмір і позиція",
+  "text.optimizationmod.separator.text_appearance": "Вигляд тексту",
+  "text.optimizationmod.separator.colors": "Кольори",
+
+  "text.optimizationmod.option.mod_enabled": "Увімкнути мод",
+  "text.optimizationmod.option.mod_enabled.tooltip": "Головний перемикач для вимкнення/увімкнення всього мода",
+
+  "text.optimizationmod.option.show_fps": "Показувати кадри на секунду",
+  "text.optimizationmod.option.show_fps.tooltip": "Відображати лічильник кадрів на секунду",
+
+  "text.optimizationmod.option.show_memory": "Показувати пам'ять",
+  "text.optimizationmod.option.show_memory.tooltip": "Відображати використання оперативної пам'яті",
+
+  "text.optimizationmod.option.show_ping": "Показувати пінг",
+  "text.optimizationmod.option.show_ping.tooltip": "Відображати затримку мережі (тільки в мультиплеєрі)",
+
+  "text.optimizationmod.option.show_coordinates": "Показувати координати",
+  "text.optimizationmod.option.show_coordinates.tooltip": "Відображати поточні координати гравця",
+
+  "text.optimizationmod.option.show_time": "Показувати час",
+  "text.optimizationmod.option.show_time.tooltip": "Відображати поточний час",
+
+  "text.optimizationmod.option.show_advanced_fps": "Розширена статистика ФПС",
+  "text.optimizationmod.option.show_advanced_fps.tooltip": "Показувати мін/сред/макс статистики для ФПС: 60 к/с (45min \\ 60avg \\ 75max)",
+
+  "text.optimizationmod.option.show_advanced_memory": "Розширена статистика пам'яті",
+  "text.optimizationmod.option.show_advanced_memory.tooltip": "Показувати мін/сред/макс статистики для пам'яті у форматі min\\avg\\max",
+
+  "text.optimizationmod.option.show_advanced_ping": "Розширена статистика пінгу",
+  "text.optimizationmod.option.show_advanced_ping.tooltip": "Показувати мін/сред/макс статистики для пінгу у форматі min\\avg\\max",
+
+  "text.optimizationmod.option.hud_scale": "Масштаб HUD",
+  "text.optimizationmod.option.hud_scale.tooltip": "Розмір елементів HUD (0.5 = 50%, 2.0 = 200%)",
+
+  "text.optimizationmod.option.hud_position": "Позиція HUD",
+  "text.optimizationmod.option.hud_position.tooltip": "Розташування HUD на екрані",
+
+  "text.optimizationmod.option.corner_snap": "Прижати до кута",
+  "text.optimizationmod.option.corner_snap.tooltip": "Прижимає HUD майже впритул до обраного кута екрану з невеличким відступом 1px",
+
+  "text.optimizationmod.option.hud_x": "X позиція",
+  "text.optimizationmod.option.hud_x.tooltip": "Горизонтальне зміщення HUD",
+
+  "text.optimizationmod.option.hud_y": "Y позиція",
+  "text.optimizationmod.option.hud_y.tooltip": "Вертикальне зміщення HUD",
+
+  "text.optimizationmod.option.hud_shadow": "Тінь тексту",
+  "text.optimizationmod.option.hud_shadow.tooltip": "Додає тінь до тексту для кращої читабельності",
+
+  "text.optimizationmod.option.hud_bold": "Жирний текст",
+  "text.optimizationmod.option.hud_bold.tooltip": "Робить текст HUD жирним",
+
+  "text.optimizationmod.option.hud_text_opacity": "Прозорість тексту",
+  "text.optimizationmod.option.hud_text_opacity.tooltip": "Налаштування видимості тексту HUD",
+
+  "text.optimizationmod.option.coordinates_color": "Колір координат",
+  "text.optimizationmod.option.coordinates_color.tooltip": "Основний колір для відображення координат XYZ",
+
+  "text.optimizationmod.option.enable_coordinate_colors": "Окремі кольори координат",
+  "text.optimizationmod.option.enable_coordinate_colors.tooltip": "Увімкнути різні кольори для X (червоний), Y (зелений), Z (синій) у тому ж рядку",
+
+  "text.optimizationmod.option.coordinates_x_color": "Колір X координати",
+  "text.optimizationmod.option.coordinates_x_color.tooltip": "Колір для відображення X координати (червоний за замовчуванням)",
+
+  "text.optimizationmod.option.coordinates_y_color": "Колір Y координати",
+  "text.optimizationmod.option.coordinates_y_color.tooltip": "Колір для відображення Y координати (зелений за замовчуванням)",
+
+  "text.optimizationmod.option.coordinates_z_color": "Колір Z координати",
+  "text.optimizationmod.option.coordinates_z_color.tooltip": "Колір для відображення Z координати (синій за замовчуванням)",
+
+  "text.optimizationmod.option.time_color": "Колір часу",
+  "text.optimizationmod.option.time_color.tooltip": "Колір для відображення поточного часу",
+
+  "text.optimizationmod.category.fps_colors": "Кольори ФПС",
+  "text.optimizationmod.option.fps_good_color": "Високий ФПС (≥60)",
+  "text.optimizationmod.option.fps_good_color.tooltip": "Колір для доброго ФПС (60 і більше кадрів)",
+  "text.optimizationmod.option.fps_medium_color": "Середній ФПС (30-59)",
+  "text.optimizationmod.option.fps_medium_color.tooltip": "Колір для середнього ФПС (30-59 кадрів)",
+  "text.optimizationmod.option.fps_bad_color": "Низький ФПС (<30)",
+  "text.optimizationmod.option.fps_bad_color.tooltip": "Колір для поганого ФПС (менше 30 кадрів)",
+
+  "text.optimizationmod.category.memory_colors": "Кольори пам'яті",
+  "text.optimizationmod.option.memory_good_color": "Мало пам'яті (<70%)",
+  "text.optimizationmod.option.memory_good_color.tooltip": "Колір коли використовується менше 70% пам'яті",
+  "text.optimizationmod.option.memory_medium_color": "Середньо пам'яті (70-89%)",
+  "text.optimizationmod.option.memory_medium_color.tooltip": "Колір коли використовується 70-89% пам'яті",
+  "text.optimizationmod.option.memory_bad_color": "Багато пам'яті (≥90%)",
+  "text.optimizationmod.option.memory_bad_color.tooltip": "Колір коли використовується 90% і більше пам'яті",
+
+  "text.optimizationmod.category.ping_colors": "Кольори пінгу",
+  "text.optimizationmod.option.ping_good_color": "Низький пінг (<50мс)",
+  "text.optimizationmod.option.ping_good_color.tooltip": "Колір для доброго пінгу (менше 50мс)",
+  "text.optimizationmod.option.ping_medium_color": "Середній пінг (50-99мс)",
+  "text.optimizationmod.option.ping_medium_color.tooltip": "Колір для середнього пінгу (50-99мс)",
+  "text.optimizationmod.option.ping_bad_color": "Високий пінг (≥100мс)",
+  "text.optimizationmod.option.ping_bad_color.tooltip": "Колір для поганого пінгу (100мс і більше)",
+
+  "text.optimizationmod.option.config_key": "Клавіша налаштувань",
+  "text.optimizationmod.option.config_key.tooltip": "Клавіша для відкриття меню налаштувань (введіть літеру)",
+
+  "text.optimizationmod.option.show_notifications": "Показувати сповіщення",
+  "text.optimizationmod.option.show_notifications.tooltip": "Показувати повідомлення про завантаження та збереження в чаті",
+
+  "text.optimizationmod.hud_position.top-left": "Верхній лівий",
+  "text.optimizationmod.hud_position.top-right": "Верхній правий",
+  "text.optimizationmod.hud_position.bottom-left": "Нижній лівий",
+  "text.optimizationmod.hud_position.bottom-right": "Нижній правий",
+
+  "text.optimizationmod.category.optimization": "Оптимізація",
+  "text.optimizationmod.category.optimization.tooltip": "Налаштування продуктивності гри",
+
+  "text.optimizationmod.option.optimization_level": "Рівень оптимізації",
+  "text.optimizationmod.option.optimization_level.tooltip": "0 = Вимкнено\n1 = Легка оптимізація\n2 = Середня оптимізація\n3 = Агресивна оптимізація",
+
+  "text.optimizationmod.option.reduce_lag": "Зменшення лагів",
+  "text.optimizationmod.option.reduce_lag.tooltip": "Автоматично оптимізує гру для кращої продуктивності",
+
+  "text.optimizationmod.option.optimize_rendering": "Оптимізувати рендер",
+  "text.optimizationmod.option.optimize_rendering.tooltip": "Покращує продуктивність рендерингу",
+
+  "text.optimizationmod.option.cull_particles": "Відбраковувати частинки",
+  "text.optimizationmod.option.cull_particles.tooltip": "Зменшує кількість частинок для кращої продуктивності",
+
+  "text.optimizationmod.option.entity_culling": "Відбраковувати сутності",
+  "text.optimizationmod.option.entity_culling.tooltip": "Не рендерить сутності за межами екрану",
+
+  "text.optimizationmod.option.optimize_chunks": "Оптимізувати чанки",
+  "text.optimizationmod.option.optimize_chunks.tooltip": "Покращує завантаження та рендеринг чанків",
+
+  "text.optimizationmod.message.loaded": "§a[Veltium] §fМод завантажено! Натисни клавішу O(En) для налаштувань",
+  "text.optimizationmod.message.saved": "§a[Veltium] §fНалаштування збережено!"
+}

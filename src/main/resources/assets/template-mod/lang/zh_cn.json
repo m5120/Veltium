@@ -1,0 +1,162 @@
+{
+  "key.optimizationmod.config": "打开配置",
+  "category.optimizationmod": "Veltium",
+
+  "text.optimizationmod.config.title": "Veltium 设置",
+
+  "text.optimizationmod.enabled": "已启用",
+  "text.optimizationmod.disabled": "已禁用",
+  "text.optimizationmod.yes": "是",
+  "text.optimizationmod.no": "否",
+
+  "text.optimizationmod.hud.fps": "%d帧",
+  "text.optimizationmod.hud.fps_stats": "%d帧 (min%d avg%d max%d)",
+  "text.optimizationmod.hud.memory": "内存: %dMB/%dMB (%d%%)",
+  "text.optimizationmod.hud.memory_stats": "内存: %s%% (min%s avg%s max%s)",
+  "text.optimizationmod.hud.ping": "延迟: %dms",
+  "text.optimizationmod.hud.ping_stats": "延迟: %dms (min%d avg%d max%d)",
+  "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
+  "text.optimizationmod.hud.time": "%s",
+
+  "text.optimizationmod.category.hud": "HUD设置",
+  "text.optimizationmod.category.hud.tooltip": "屏幕信息显示设置",
+
+  "text.optimizationmod.category.mod_settings": "模组设置",
+  "text.optimizationmod.category.mod_settings.tooltip": "基本模组操作设置",
+
+  "text.optimizationmod.category.coordinate_colors": "坐标颜色",
+
+  "text.optimizationmod.separator.hud_elements": "HUD元素",
+  "text.optimizationmod.separator.advanced_stats": "高级统计",
+  "text.optimizationmod.separator.size_position": "大小和位置",
+  "text.optimizationmod.separator.text_appearance": "文本外观",
+  "text.optimizationmod.separator.colors": "颜色",
+
+  "text.optimizationmod.option.mod_enabled": "启用模组",
+  "text.optimizationmod.option.mod_enabled.tooltip": "主开关，用于启用/禁用整个模组",
+
+  "text.optimizationmod.option.show_fps": "显示帧率",
+  "text.optimizationmod.option.show_fps.tooltip": "显示每秒帧数计数器",
+
+  "text.optimizationmod.option.show_memory": "显示内存",
+  "text.optimizationmod.option.show_memory.tooltip": "显示内存使用信息",
+
+  "text.optimizationmod.option.show_ping": "显示延迟",
+  "text.optimizationmod.option.show_ping.tooltip": "显示网络延迟（仅多人游戏）",
+
+  "text.optimizationmod.option.show_coordinates": "显示坐标",
+  "text.optimizationmod.option.show_coordinates.tooltip": "显示当前玩家坐标",
+
+  "text.optimizationmod.option.show_time": "显示时间",
+  "text.optimizationmod.option.show_time.tooltip": "显示当前时间",
+
+  "text.optimizationmod.option.show_advanced_fps": "高级帧率统计",
+  "text.optimizationmod.option.show_advanced_fps.tooltip": "显示帧率的最小/平均/最大统计: 60帧 (45min \\ 60avg \\ 75max)",
+
+  "text.optimizationmod.option.show_advanced_memory": "高级内存统计",
+  "text.optimizationmod.option.show_advanced_memory.tooltip": "以min\\avg\\max格式显示内存的最小/平均/最大统计",
+
+  "text.optimizationmod.option.show_advanced_ping": "高级延迟统计",
+  "text.optimizationmod.option.show_advanced_ping.tooltip": "以min\\avg\\max格式显示延迟的最小/平均/最大统计",
+
+  "text.optimizationmod.option.hud_scale": "HUD缩放",
+  "text.optimizationmod.option.hud_scale.tooltip": "HUD元素大小 (0.5 = 50%, 2.0 = 200%)",
+
+  "text.optimizationmod.option.hud_position": "HUD位置",
+  "text.optimizationmod.option.hud_position.tooltip": "HUD在屏幕上的位置",
+
+  "text.optimizationmod.option.corner_snap": "贴靠角落",
+  "text.optimizationmod.option.corner_snap.tooltip": "将HUD几乎贴靠到所选屏幕角落，留有1px的小间距",
+
+  "text.optimizationmod.option.hud_x": "X位置",
+  "text.optimizationmod.option.hud_x.tooltip": "HUD水平偏移",
+
+  "text.optimizationmod.option.hud_y": "Y位置",
+  "text.optimizationmod.option.hud_y.tooltip": "HUD垂直偏移",
+
+  "text.optimizationmod.option.hud_shadow": "文字阴影",
+  "text.optimizationmod.option.hud_shadow.tooltip": "为文字添加阴影以提高可读性",
+
+  "text.optimizationmod.option.hud_bold": "粗体文字",
+  "text.optimizationmod.option.hud_bold.tooltip": "使HUD文字加粗",
+
+  "text.optimizationmod.option.hud_text_opacity": "文字透明度",
+  "text.optimizationmod.option.hud_text_opacity.tooltip": "HUD文字可见性设置",
+
+  "text.optimizationmod.option.coordinates_color": "坐标颜色",
+  "text.optimizationmod.option.coordinates_color.tooltip": "XYZ坐标显示的主要颜色",
+
+  "text.optimizationmod.option.enable_coordinate_colors": "分离坐标颜色",
+  "text.optimizationmod.option.enable_coordinate_colors.tooltip": "在同一行中为X（红色）、Y（绿色）、Z（蓝色）启用不同颜色",
+
+  "text.optimizationmod.option.coordinates_x_color": "X坐标颜色",
+  "text.optimizationmod.option.coordinates_x_color.tooltip": "X坐标显示的颜色（默认为红色）",
+
+  "text.optimizationmod.option.coordinates_y_color": "Y坐标颜色",
+  "text.optimizationmod.option.coordinates_y_color.tooltip": "Y坐标显示的颜色（默认为绿色）",
+
+  "text.optimizationmod.option.coordinates_z_color": "Z坐标颜色",
+  "text.optimizationmod.option.coordinates_z_color.tooltip": "Z坐标显示的颜色（默认为蓝色）",
+
+  "text.optimizationmod.option.time_color": "时间颜色",
+  "text.optimizationmod.option.time_color.tooltip": "当前时间显示的颜色",
+
+  "text.optimizationmod.category.fps_colors": "帧率颜色",
+  "text.optimizationmod.option.fps_good_color": "高帧率 (≥60)",
+  "text.optimizationmod.option.fps_good_color.tooltip": "良好帧率的颜色 (60+帧)",
+  "text.optimizationmod.option.fps_medium_color": "中等帧率 (30-59)",
+  "text.optimizationmod.option.fps_medium_color.tooltip": "中等帧率的颜色 (30-59帧)",
+  "text.optimizationmod.option.fps_bad_color": "低帧率 (<30)",
+  "text.optimizationmod.option.fps_bad_color.tooltip": "糟糕帧率的颜色 (少于30帧)",
+
+  "text.optimizationmod.category.memory_colors": "内存颜色",
+  "text.optimizationmod.option.memory_good_color": "内存较低 (<70%)",
+  "text.optimizationmod.option.memory_good_color.tooltip": "使用少于70%内存时的颜色",
+  "text.optimizationmod.option.memory_medium_color": "内存中等 (70-89%)",
+  "text.optimizationmod.option.memory_medium_color.tooltip": "使用70-89%内存时的颜色",
+  "text.optimizationmod.option.memory_bad_color": "内存较高 (≥90%)",
+  "text.optimizationmod.option.memory_bad_color.tooltip": "使用90%+内存时的颜色",
+
+  "text.optimizationmod.category.ping_colors": "延迟颜色",
+  "text.optimizationmod.option.ping_good_color": "低延迟 (<50ms)",
+  "text.optimizationmod.option.ping_good_color.tooltip": "良好延迟的颜色 (少于50ms)",
+  "text.optimizationmod.option.ping_medium_color": "中等延迟 (50-99ms)",
+  "text.optimizationmod.option.ping_medium_color.tooltip": "中等延迟的颜色 (50-99ms)",
+  "text.optimizationmod.option.ping_bad_color": "高延迟 (≥100ms)",
+  "text.optimizationmod.option.ping_bad_color.tooltip": "糟糕延迟的颜色 (100ms+)",
+
+  "text.optimizationmod.option.config_key": "配置键",
+  "text.optimizationmod.option.config_key.tooltip": "打开设置菜单的键（输入字母）",
+
+  "text.optimizationmod.option.show_notifications": "显示通知",
+  "text.optimizationmod.option.show_notifications.tooltip": "在聊天中显示加载和保存消息",
+
+  "text.optimizationmod.hud_position.top-left": "左上角",
+  "text.optimizationmod.hud_position.top-right": "右上角",
+  "text.optimizationmod.hud_position.bottom-left": "左下角",
+  "text.optimizationmod.hud_position.bottom-right": "右下角",
+
+  "text.optimizationmod.category.optimization": "优化",
+  "text.optimizationmod.category.optimization.tooltip": "游戏性能设置",
+
+  "text.optimizationmod.option.optimization_level": "优化级别",
+  "text.optimizationmod.option.optimization_level.tooltip": "0 = 禁用\n1 = 轻度优化\n2 = 中度优化\n3 = 激进优化",
+
+  "text.optimizationmod.option.reduce_lag": "减少卡顿",
+  "text.optimizationmod.option.reduce_lag.tooltip": "自动优化游戏以获得更好的性能",
+
+  "text.optimizationmod.option.optimize_rendering": "优化渲染",
+  "text.optimizationmod.option.optimize_rendering.tooltip": "提高渲染性能",
+
+  "text.optimizationmod.option.cull_particles": "剔除粒子",
+  "text.optimizationmod.option.cull_particles.tooltip": "减少粒子数量以获得更好的性能",
+
+  "text.optimizationmod.option.entity_culling": "实体剔除",
+  "text.optimizationmod.option.entity_culling.tooltip": "不渲染屏幕外的实体",
+
+  "text.optimizationmod.option.optimize_chunks": "优化区块",
+  "text.optimizationmod.option.optimize_chunks.tooltip": "改进区块加载和渲染",
+
+  "text.optimizationmod.message.loaded": "§a[Veltium] §f模组已加载！按键打开设置",
+  "text.optimizationmod.message.saved": "§a[Veltium] §f设置已保存！"
+}

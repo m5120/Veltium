@@ -1,0 +1,162 @@
+{
+  "key.optimizationmod.config": "Otwórz konfigurację",
+  "category.optimizationmod": "Veltium",
+
+  "text.optimizationmod.config.title": "Ustawienia Veltium",
+
+  "text.optimizationmod.enabled": "Włączone",
+  "text.optimizationmod.disabled": "Wyłączone",
+  "text.optimizationmod.yes": "Tak",
+  "text.optimizationmod.no": "Nie",
+
+  "text.optimizationmod.hud.fps": "%d FPS",
+  "text.optimizationmod.hud.fps_stats": "%d FPS (min%d avg%d max%d)",
+  "text.optimizationmod.hud.memory": "Pamięć: %dMB/%dMB (%d%%)",
+  "text.optimizationmod.hud.memory_stats": "Pamięć: %s%% (min%s avg%s max%s)",
+  "text.optimizationmod.hud.ping": "Ping: %dms",
+  "text.optimizationmod.hud.ping_stats": "Ping: %dms (min%d avg%d max%d)",
+  "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
+  "text.optimizationmod.hud.time": "%s",
+
+  "text.optimizationmod.category.hud": "Ustawienia HUD",
+  "text.optimizationmod.category.hud.tooltip": "Ustawienia wyświetlania informacji na ekranie",
+
+  "text.optimizationmod.category.mod_settings": "Ustawienia moda",
+  "text.optimizationmod.category.mod_settings.tooltip": "Podstawowe ustawienia działania moda",
+
+  "text.optimizationmod.category.coordinate_colors": "Kolory współrzędnych",
+
+  "text.optimizationmod.separator.hud_elements": "Elementy HUD",
+  "text.optimizationmod.separator.advanced_stats": "Zaawansowane statystyki",
+  "text.optimizationmod.separator.size_position": "Rozmiar i pozycja",
+  "text.optimizationmod.separator.text_appearance": "Wygląd tekstu",
+  "text.optimizationmod.separator.colors": "Kolory",
+
+  "text.optimizationmod.option.mod_enabled": "Włącz mod",
+  "text.optimizationmod.option.mod_enabled.tooltip": "Główny przełącznik do włączania/wyłączania całego moda",
+
+  "text.optimizationmod.option.show_fps": "Pokaż FPS",
+  "text.optimizationmod.option.show_fps.tooltip": "Wyświetl licznik klatek na sekundę",
+
+  "text.optimizationmod.option.show_memory": "Pokaż pamięć",
+  "text.optimizationmod.option.show_memory.tooltip": "Wyświetl informacje o użyciu pamięci",
+
+  "text.optimizationmod.option.show_ping": "Pokaż ping",
+  "text.optimizationmod.option.show_ping.tooltip": "Wyświetl opóźnienie sieciowe (tylko multiplayer)",
+
+  "text.optimizationmod.option.show_coordinates": "Pokaż współrzędne",
+  "text.optimizationmod.option.show_coordinates.tooltip": "Wyświetl aktualne współrzędne gracza",
+
+  "text.optimizationmod.option.show_time": "Pokaż czas",
+  "text.optimizationmod.option.show_time.tooltip": "Wyświetl aktualny czas",
+
+  "text.optimizationmod.option.show_advanced_fps": "Zaawansowane statystyki FPS",
+  "text.optimizationmod.option.show_advanced_fps.tooltip": "Pokaż statystyki min/śr/max dla FPS: 60 FPS (45min \\ 60avg \\ 75max)",
+
+  "text.optimizationmod.option.show_advanced_memory": "Zaawansowane statystyki pamięci",
+  "text.optimizationmod.option.show_advanced_memory.tooltip": "Pokaż statystyki min/śr/max dla pamięci w formacie min\\avg\\max",
+
+  "text.optimizationmod.option.show_advanced_ping": "Zaawansowane statystyki pingu",
+  "text.optimizationmod.option.show_advanced_ping.tooltip": "Pokaż statystyki min/śr/max dla pingu w formacie min\\avg\\max",
+
+  "text.optimizationmod.option.hud_scale": "Skala HUD",
+  "text.optimizationmod.option.hud_scale.tooltip": "Rozmiar elementów HUD (0.5 = 50%, 2.0 = 200%)",
+
+  "text.optimizationmod.option.hud_position": "Pozycja HUD",
+  "text.optimizationmod.option.hud_position.tooltip": "Pozycja HUD na ekranie",
+
+  "text.optimizationmod.option.corner_snap": "Przyciągnij do rogu",
+  "text.optimizationmod.option.corner_snap.tooltip": "Przyciąga HUD prawie do wybranego rogu ekranu z małym 1px odstępem",
+
+  "text.optimizationmod.option.hud_x": "Pozycja X",
+  "text.optimizationmod.option.hud_x.tooltip": "Poziome przesunięcie HUD",
+
+  "text.optimizationmod.option.hud_y": "Pozycja Y",
+  "text.optimizationmod.option.hud_y.tooltip": "Pionowe przesunięcie HUD",
+
+  "text.optimizationmod.option.hud_shadow": "Cień tekstu",
+  "text.optimizationmod.option.hud_shadow.tooltip": "Dodaje cień do tekstu dla lepszej czytelności",
+
+  "text.optimizationmod.option.hud_bold": "Pogrubiony tekst",
+  "text.optimizationmod.option.hud_bold.tooltip": "Sprawia, że tekst HUD jest pogrubiony",
+
+  "text.optimizationmod.option.hud_text_opacity": "Przezroczystość tekstu",
+  "text.optimizationmod.option.hud_text_opacity.tooltip": "Ustawienia widoczności tekstu HUD",
+
+  "text.optimizationmod.option.coordinates_color": "Kolor współrzędnych",
+  "text.optimizationmod.option.coordinates_color.tooltip": "Główny kolor dla wyświetlania współrzędnych XYZ",
+
+  "text.optimizationmod.option.enable_coordinate_colors": "Oddzielne kolory współrzędnych",
+  "text.optimizationmod.option.enable_coordinate_colors.tooltip": "Włącz różne kolory dla X (czerwony), Y (zielony), Z (niebieski) w tej samej linii",
+
+  "text.optimizationmod.option.coordinates_x_color": "Kolor współrzędnej X",
+  "text.optimizationmod.option.coordinates_x_color.tooltip": "Kolor dla wyświetlania współrzędnej X (domyślnie czerwony)",
+
+  "text.optimizationmod.option.coordinates_y_color": "Kolor współrzędnej Y",
+  "text.optimizationmod.option.coordinates_y_color.tooltip": "Kolor dla wyświetlania współrzędnej Y (domyślnie zielony)",
+
+  "text.optimizationmod.option.coordinates_z_color": "Kolor współrzędnej Z",
+  "text.optimizationmod.option.coordinates_z_color.tooltip": "Kolor dla wyświetlania współrzędnej Z (domyślnie niebieski)",
+
+  "text.optimizationmod.option.time_color": "Kolor czasu",
+  "text.optimizationmod.option.time_color.tooltip": "Kolor dla wyświetlania aktualnego czasu",
+
+  "text.optimizationmod.category.fps_colors": "Kolory FPS",
+  "text.optimizationmod.option.fps_good_color": "Wysokie FPS (≥60)",
+  "text.optimizationmod.option.fps_good_color.tooltip": "Kolor dla dobrego FPS (60+ klatek)",
+  "text.optimizationmod.option.fps_medium_color": "Średnie FPS (30-59)",
+  "text.optimizationmod.option.fps_medium_color.tooltip": "Kolor dla średniego FPS (30-59 klatek)",
+  "text.optimizationmod.option.fps_bad_color": "Niskie FPS (<30)",
+  "text.optimizationmod.option.fps_bad_color.tooltip": "Kolor dla złego FPS (mniej niż 30 klatek)",
+
+  "text.optimizationmod.category.memory_colors": "Kolory pamięci",
+  "text.optimizationmod.option.memory_good_color": "Mała pamięć (<70%)",
+  "text.optimizationmod.option.memory_good_color.tooltip": "Kolor przy używaniu mniej niż 70% pamięci",
+  "text.optimizationmod.option.memory_medium_color": "Średnia pamięć (70-89%)",
+  "text.optimizationmod.option.memory_medium_color.tooltip": "Kolor przy używaniu 70-89% pamięci",
+  "text.optimizationmod.option.memory_bad_color": "Wysoka pamięć (≥90%)",
+  "text.optimizationmod.option.memory_bad_color.tooltip": "Kolor przy używaniu 90%+ pamięci",
+
+  "text.optimizationmod.category.ping_colors": "Kolory pingu",
+  "text.optimizationmod.option.ping_good_color": "Niski ping (<50ms)",
+  "text.optimizationmod.option.ping_good_color.tooltip": "Kolor dla dobrego pingu (mniej niż 50ms)",
+  "text.optimizationmod.option.ping_medium_color": "Średni ping (50-99ms)",
+  "text.optimizationmod.option.ping_medium_color.tooltip": "Kolor dla średniego pingu (50-99ms)",
+  "text.optimizationmod.option.ping_bad_color": "Wysoki ping (≥100ms)",
+  "text.optimizationmod.option.ping_bad_color.tooltip": "Kolor dla złego pingu (100ms+)",
+
+  "text.optimizationmod.option.config_key": "Klawisz konfiguracji",
+  "text.optimizationmod.option.config_key.tooltip": "Klawisz do otwierania menu ustawień (wprowadź literę)",
+
+  "text.optimizationmod.option.show_notifications": "Pokaż powiadomienia",
+  "text.optimizationmod.option.show_notifications.tooltip": "Pokaż wiadomości o ładowaniu i zapisywaniu na czacie",
+
+  "text.optimizationmod.hud_position.top-left": "Góra lewo",
+  "text.optimizationmod.hud_position.top-right": "Góra prawo",
+  "text.optimizationmod.hud_position.bottom-left": "Dół lewo",
+  "text.optimizationmod.hud_position.bottom-right": "Dół prawo",
+
+  "text.optimizationmod.category.optimization": "Optymalizacja",
+  "text.optimizationmod.category.optimization.tooltip": "Ustawienia wydajności gry",
+
+  "text.optimizationmod.option.optimization_level": "Poziom optymalizacji",
+  "text.optimizationmod.option.optimization_level.tooltip": "0 = Wyłączone\n1 = Lekka optymalizacja\n2 = Średnia optymalizacja\n3 = Agresywna optymalizacja",
+
+  "text.optimizationmod.option.reduce_lag": "Zmniejsz opóźnienia",
+  "text.optimizationmod.option.reduce_lag.tooltip": "Automatycznie optymalizuje grę dla lepszej wydajności",
+
+  "text.optimizationmod.option.optimize_rendering": "Optymalizuj renderowanie",
+  "text.optimizationmod.option.optimize_rendering.tooltip": "Poprawia wydajność renderowania",
+
+  "text.optimizationmod.option.cull_particles": "Ukryj cząsteczki",
+  "text.optimizationmod.option.cull_particles.tooltip": "Zmniejsza liczbę cząsteczek dla lepszej wydajności",
+
+  "text.optimizationmod.option.entity_culling": "Ukrywanie encji",
+  "text.optimizationmod.option.entity_culling.tooltip": "Nie renderuj encji poza ekranem",
+
+  "text.optimizationmod.option.optimize_chunks": "Optymalizuj chunki",
+  "text.optimizationmod.option.optimize_chunks.tooltip": "Poprawia ładowanie i renderowanie chunków",
+
+  "text.optimizationmod.message.loaded": "§a[Veltium] §fMod załadowany! Naciśnij klawisz O(En) dla ustawień",
+  "text.optimizationmod.message.saved": "§a[Veltium] §fUstawienia zapisane!"
+}
