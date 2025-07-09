@@ -44,6 +44,8 @@ dependencies {
 
 	modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 	modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}"
+	implementation 'com.twelvemonkeys.imageio:imageio-webp:3.10.1'
+	runtimeOnly 'com.twelvemonkeys.imageio:imageio-webp:3.10.1'
 }
 
 processResources {
