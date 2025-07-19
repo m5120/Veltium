@@ -158,5 +158,12 @@
   "text.optimizationmod.option.optimize_chunks.tooltip": "Покращує завантаження та рендеринг чанків",
 
   "text.optimizationmod.message.loaded": "§a[Veltium] §fМод завантажено! Натисни клавішу O(En) для налаштувань",
-  "text.optimizationmod.message.saved": "§a[Veltium] §fНалаштування збережено!"
+  "text.optimizationmod.message.saved": "§a[Veltium] §fНалаштування збережено!",
+
+  "text.optimizationmod.option.hud_position": "Позиція HUD",
+  "text.optimizationmod.option.hud_position.tooltip": "Виберіть позицію HUD на екрані",
+  "text.optimizationmod.hud_position.top_left": "Верх-ліво",
+  "text.optimizationmod.hud_position.top_right": "Верх-право",
+  "text.optimizationmod.hud_position.bottom_left": "Низ-ліво",
+  "text.optimizationmod.hud_position.bottom_right": "Низ-право"
 }

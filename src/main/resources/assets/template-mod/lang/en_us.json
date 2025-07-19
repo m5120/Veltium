@@ -158,5 +158,12 @@
   "text.optimizationmod.option.optimize_chunks.tooltip": "Improves chunk loading and rendering",
 
   "text.optimizationmod.message.loaded": "§a[Veltium] §fMod loaded! Press key O for settings",
-  "text.optimizationmod.message.saved": "§a[Veltium] §fSettings saved!"
+  "text.optimizationmod.message.saved": "§a[Veltium] §fSettings saved!",
+
+  "text.optimizationmod.option.hud_position": "HUD Position",
+  "text.optimizationmod.option.hud_position.tooltip": "Select HUD position on screen",
+  "text.optimizationmod.hud_position.top_left": "Top Left",
+  "text.optimizationmod.hud_position.top_right": "Top Right",
+  "text.optimizationmod.hud_position.bottom_left": "Bottom Left",
+  "text.optimizationmod.hud_position.bottom_right": "Bottom Right"
 }

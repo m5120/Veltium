@@ -122,12 +122,12 @@ public class TemplateModClient implements ClientModInitializer {
         }
 
         // застосовуємо масштаб
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().scale(config.hudScale, config.hudScale, config.hudScale);
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().scale(config.hudScale, config.hudScale);
 
         renderHudElements(drawContext, client);
 
-        drawContext.getMatrices().pop();
+        drawContext.getMatrices().popMatrix();
     }
 
     private void updateStatistics(MinecraftClient client) {
@@ -277,37 +277,38 @@ public class TemplateModClient implements ClientModInitializer {
         if (hudLines.isEmpty()) return;
 
         // обчислюємо розміри HUD
-        int maxWidth = 0;
-        for (ColoredText line : hudLines) {
-            int width = client.textRenderer.getWidth(line.text);
-            if (width > maxWidth) maxWidth = width;
-        }
-
         int totalHeight = hudLines.size() * 12 + 8;
         int padding = 4;
 
-        int baseX = getHudX(client, maxWidth + padding * 2);
-        int baseY = getHudY(client, totalHeight);
-
-        // рендеримо фон якщо потрібно
-        if (config.hudBackgroundColor != 0 && config.hudBackgroundOpacity > 0) {
-            int bgColor = (config.hudBackgroundColor & 0xFFFFFF) | ((int)(config.hudBackgroundOpacity * 255) << 24);
-            drawContext.fill(baseX - padding, baseY - padding,
-                    baseX + maxWidth + padding, baseY + totalHeight - padding, bgColor);
-        }
-
-        int scaledX = (int)(baseX / config.hudScale);
-        int scaledY = (int)(baseY / config.hudScale);
-
-        // рендеримо текст з кольоровими частинами для координат
         for (int i = 0; i < hudLines.size(); i++) {
             ColoredText line = hudLines.get(i);
-            int lineY = scaledY + i * 12;
+
+            int textWidth = client.textRenderer.getWidth(line.text);
+            int baseX, baseY;
+
+            // для правих позицій починаємо з правого краю екрана
+            if (config.hudPosition.equals("top-right") || config.hudPosition.equals("bottom-right")) {
+                baseX = getHudX(client, textWidth + padding * 2);
+                baseY = getHudY(client, totalHeight);
+            } else {
+                baseX = getHudX(client, textWidth + padding * 2);
+                baseY = getHudY(client, totalHeight);
+            }
+
+            int scaledX = (int)(baseX / config.hudScale);
+            int scaledY = (int)((baseY + i * 12) / config.hudScale);
+
+            // рендеримо фон для кожного рядка окремо
+            if (config.hudBackgroundColor != 0 && config.hudBackgroundOpacity > 0) {
+                int bgColor = (config.hudBackgroundColor & 0xFFFFFF) | ((int)(config.hudBackgroundOpacity * 255) << 24);
+                drawContext.fill(baseX - padding, baseY + i * 12 - padding,
+                        baseX + textWidth + padding, baseY + i * 12 + 12 - padding, bgColor);
+            }
 
             if (config.showCoordinates && config.enableCoordinateColors && line.text.contains("XYZ")) {
-                renderColoredCoordinates(drawContext, client, line.text, scaledX, lineY);
+                renderColoredCoordinates(drawContext, client, line.text, scaledX, scaledY);
             } else {
-                renderTextLine(drawContext, client, line.text, scaledX, lineY, line.color);
+                renderTextLine(drawContext, client, line.text, scaledX, scaledY, line.color);
             }
         }
     }
@@ -379,19 +380,18 @@ public class TemplateModClient implements ClientModInitializer {
             drawContext.drawText(client.textRenderer, mutableText, x, y, finalColor, false);
         }
     }
-
     private int getHudX(MinecraftClient client, int hudWidth) {
         int screenWidth = client.getWindow().getScaledWidth();
 
         if (config.cornerSnap) {
             return switch (config.hudPosition) {
-                case "top-right", "bottom-right" -> (int)((screenWidth - hudWidth - 1) / config.hudScale);
-                default -> (int)(1 / config.hudScale);
+                case TOP_RIGHT, BOTTOM_RIGHT -> (int) ((screenWidth - hudWidth - 1) / config.hudScale);
+                default -> (int) (1 / config.hudScale);
             };
         } else {
             return switch (config.hudPosition) {
-                case "top-right", "bottom-right" -> Math.max(0, (int)((screenWidth - hudWidth - config.hudX) / config.hudScale));
-                default -> Math.max(0, (int)(config.hudX / config.hudScale));
+                case TOP_RIGHT, BOTTOM_RIGHT -> Math.max(0, (int) ((screenWidth - hudWidth - config.hudX) / config.hudScale));
+                default -> Math.max(0, (int) (config.hudX / config.hudScale));
             };
         }
     }
@@ -401,13 +401,13 @@ public class TemplateModClient implements ClientModInitializer {
 
         if (config.cornerSnap) {
             return switch (config.hudPosition) {
-                case "bottom-left", "bottom-right" -> (int)((screenHeight - hudHeight - 1) / config.hudScale);
-                default -> (int)(1 / config.hudScale);
+                case BOTTOM_LEFT, BOTTOM_RIGHT -> (int) ((screenHeight - hudHeight - 1) / config.hudScale);
+                default -> (int) (1 / config.hudScale);
             };
         } else {
             return switch (config.hudPosition) {
-                case "bottom-left", "bottom-right" -> Math.max(0, (int)((screenHeight - hudHeight - config.hudY) / config.hudScale));
-                default -> Math.max(0, (int)(config.hudY / config.hudScale));
+                case BOTTOM_LEFT, BOTTOM_RIGHT -> Math.max(0, (int) ((screenHeight - hudHeight - config.hudY) / config.hudScale));
+                default -> Math.max(0, (int) (config.hudY / config.hudScale));
             };
         }
     }

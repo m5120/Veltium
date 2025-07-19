@@ -25,6 +25,7 @@
 			"com.example.OptimizationModMenuIntegration"
 		]
 	},
+
 	"mixins": [
 		"template-mod.mixins.json",
 		{
@@ -34,7 +35,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
-		"minecraft": ">=1.21 <1.21.6",
+		"minecraft": ">=1.21.6 <1.22",
 		"java": ">=21",
 		"fabric-api": "*"
 	},

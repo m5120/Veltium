@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+
 public class YACLConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("veltium-config.json");
@@ -34,17 +35,17 @@ public class YACLConfig {
     public boolean cornerSnap = false;
 
     // === ОСНОВНІ НАЛАШТУВАННЯ ===
-    public int optimizationLevel = 2;
+    public int optimizationLevel = 0;
     public int maxParticles = 100;
 
-    // === ОПТИМІЗАЦІЇ ===
-    public boolean reduceLag = true;
-    public boolean optimizeRendering = true;
+    // === ОПТИМІЗАЦІЯ БІЛЬШІСТЬ false ТОМУ-ЩО ЦЕ ДОСИТЬ ПОГАНА ОПТИМІЗАЦІЯ І НЕСТАБІЛЬНА ===
+    public boolean reduceLag = false;
+    public boolean optimizeRendering = false;
     public boolean cullParticles = true;
-    public boolean enableEntityCulling = true;
-    public boolean optimizeChunks = true;
-    public boolean fastMath = true;
-    public boolean smartMemoryManagement = true;
+    public boolean enableEntityCulling = false;
+    public boolean optimizeChunks = false;
+    public boolean fastMath = false;
+    public boolean smartMemoryManagement = false;
     public int tickOptimizationLevel = 1;
 
     // === ЕЛЕМЕНТИ HUD ===
@@ -60,7 +61,7 @@ public class YACLConfig {
     public boolean showAdvancedPing = false;
 
     // === ПОЗИЦІЯ HUD ===
-    public String hudPosition = "top-left";
+    public HudPosition hudPosition = HudPosition.TOP_LEFT;
     public int hudX = 10;
     public int hudY = 10;
 
@@ -99,6 +100,27 @@ public class YACLConfig {
 
     // Колір часу
     public int timeColor = 0xFFFFFF;
+
+    // === ENUM ДЛЯ ПОЗИЦІЙ HUD ===
+    public enum HudPosition implements NameableEnum {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT;
+
+        @Override
+        public Text getDisplayName() {
+            return Text.translatable("text.optimizationmod.hud_position." + name().toLowerCase());
+        }
+
+        // Метод для переключення на наступну позицію
+        public HudPosition next() {
+            HudPosition[] values = values();
+            int currentIndex = this.ordinal();
+            int nextIndex = (currentIndex + 1) % values.length;
+            return values[nextIndex];
+        }
+    }
 
     // === МЕТОДИ ДЛЯ КОЛЬОРІВ ===
     private static Color intToColor(int color) {
@@ -209,7 +231,7 @@ public class YACLConfig {
         this.showAdvancedFps = other.showAdvancedFps;
         this.showAdvancedMemory = other.showAdvancedMemory;
         this.showAdvancedPing = other.showAdvancedPing;
-        this.hudPosition = other.hudPosition != null ? other.hudPosition : "top-left";
+        this.hudPosition = other.hudPosition != null ? other.hudPosition : HudPosition.TOP_LEFT;
         this.hudX = other.hudX;
         this.hudY = other.hudY;
         this.hudUpdateInterval = other.hudUpdateInterval;
@@ -337,12 +359,16 @@ public class YACLConfig {
                                 .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.5f, 3.0f).step(0.1f))
                                 .build())
 
-                        .option(Option.<String>createBuilder()
+                        // HUD Position як перемикач
+                        .option(Option.<HudPosition>createBuilder()
                                 .name(Text.translatable("text.optimizationmod.option.hud_position"))
                                 .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_position.tooltip")))
-                                .binding("top-left", () -> config.hudPosition, val -> config.hudPosition = val)
-                                .controller(opt -> DropdownStringControllerBuilder.create(opt)
-                                        .values("top-left", "top-right", "bottom-left", "bottom-right"))
+                                .binding(HudPosition.TOP_LEFT,
+                                        () -> config.hudPosition,
+                                        val -> config.hudPosition = val)
+                                .controller(opt -> CyclingListControllerBuilder.create(opt)
+                                        .values(java.util.Arrays.asList(HudPosition.values()))
+                                        .formatValue(pos -> pos.getDisplayName()))
                                 .build())
 
                         .option(createBooleanOption(

@@ -158,5 +158,12 @@
   "text.optimizationmod.option.optimize_chunks.tooltip": "改进区块加载和渲染",
 
   "text.optimizationmod.message.loaded": "§a[Veltium] §f模组已加载！按键打开设置",
-  "text.optimizationmod.message.saved": "§a[Veltium] §f设置已保存！"
+  "text.optimizationmod.message.saved": "§a[Veltium] §f设置已保存！",
+
+  "text.optimizationmod.option.hud_position": "HUD 位置",
+  "text.optimizationmod.option.hud_position.tooltip": "选择 HUD 在屏幕上的位置",
+  "text.optimizationmod.hud_position.top_left": "左上",
+  "text.optimizationmod.hud_position.top_right": "右上",
+  "text.optimizationmod.hud_position.bottom_left": "左下",
+  "text.optimizationmod.hud_position.bottom_right": "右下"
 }
