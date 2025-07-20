@@ -8,7 +8,7 @@
 		"5120"
 	],
 	"contact": {
-		"homepage": "https://modrinth.com/mods/veltium",
+		"homepage": "https://modrinth.com/mod/veltium",
 		"sources": "https://github.com/m5120/Veltium"
 	},
 	"license": "CC0-1.0",
@@ -35,7 +35,7 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
-		"minecraft": ">=1.21 <1.21.6",
+		"minecraft": ">=1.21.6 <1.22",
 		"java": ">=21",
 		"fabric-api": "*"
 	},

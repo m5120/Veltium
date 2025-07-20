@@ -165,5 +165,11 @@
   "text.optimizationmod.hud_position.top_left": "Верх-ліво",
   "text.optimizationmod.hud_position.top_right": "Верх-право",
   "text.optimizationmod.hud_position.bottom_left": "Низ-ліво",
-  "text.optimizationmod.hud_position.bottom_right": "Низ-право"
+  "text.optimizationmod.hud_position.bottom_right": "Низ-право",
+
+  "text.optimizationmod.hud.days": "Днів: %d",
+  "text.optimizationmod.option.show_days": "Показувати дні",
+  "text.optimizationmod.option.show_days.tooltip": "Показувати лічильник днів",
+  "text.optimizationmod.option.days_color": "Колір лічильника днів",
+  "text.optimizationmod.option.days_color.tooltip": "Колір для лічильника днів"
 }

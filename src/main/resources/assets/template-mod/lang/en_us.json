@@ -165,5 +165,11 @@
   "text.optimizationmod.hud_position.top_left": "Top Left",
   "text.optimizationmod.hud_position.top_right": "Top Right",
   "text.optimizationmod.hud_position.bottom_left": "Bottom Left",
-  "text.optimizationmod.hud_position.bottom_right": "Bottom Right"
+  "text.optimizationmod.hud_position.bottom_right": "Bottom Right",
+
+  "text.optimizationmod.hud.days": "Days: %d",
+  "text.optimizationmod.option.show_days": "Show Days",
+  "text.optimizationmod.option.show_days.tooltip": "Display world days counter",
+  "text.optimizationmod.option.days_color": "Days Counter Color",
+  "text.optimizationmod.option.days_color.tooltip": "Color for days counter"
 }

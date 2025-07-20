@@ -29,6 +29,7 @@ public class TemplateModClient implements ClientModInitializer {
     private long lastHudUpdate = 0;
     private long lastGC = 0;
     private String cachedTime = "";
+    private long cachedDays = 0;
     private int cachedPing = 0;
     private boolean messageSent = false;
     private final List<ColoredText> hudLines = new ArrayList<>();
@@ -122,12 +123,12 @@ public class TemplateModClient implements ClientModInitializer {
         }
 
         // застосовуємо масштаб
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().scale(config.hudScale, config.hudScale, 1.0F);
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().scale(config.hudScale, config.hudScale);
 
         renderHudElements(drawContext, client);
 
-        drawContext.getMatrices().pop();
+        drawContext.getMatrices().popMatrix();
     }
 
     private void updateStatistics(MinecraftClient client) {
@@ -274,6 +275,13 @@ public class TemplateModClient implements ClientModInitializer {
             hudLines.add(new ColoredText(timeText, config.timeColor));
         }
 
+        if (config.showDays && client.world != null) {
+            long worldTime = client.world.getTimeOfDay();
+            long days = worldTime / 24000L;
+            String daysText = Text.translatable("text.optimizationmod.hud.days", days).getString();
+            hudLines.add(new ColoredText(daysText, config.daysColor));
+        }
+
         if (hudLines.isEmpty()) return;
 
         // то не я рахую розміри HUD
@@ -305,36 +313,37 @@ public class TemplateModClient implements ClientModInitializer {
 
     // рендеринг координат з кольоровими частинами
     private void renderColoredCoordinates(DrawContext drawContext, MinecraftClient client, String text, int x, int y) {
-        // знаходимо позицію після "XYZ: "
         int colonIndex = text.indexOf(':');
         if (colonIndex == -1) {
             renderTextLine(drawContext, client, text, x, y, config.coordinatesColor);
             return;
         }
 
-        String prefix = text.substring(0, colonIndex + 2); // "XYZ: "
-        String coordinates = text.substring(colonIndex + 2); // "123.4 567.8 901.2"
-
+        String prefix = text.substring(0, colonIndex + 2);
+        String coordinates = text.substring(colonIndex + 2);
         String[] parts = coordinates.trim().split(" ");
+
         if (parts.length >= 3) {
             int currentX = x;
+            int spacing = config.hudBold ? 2 : 1;
 
-            // рендеримо префікс
             renderTextLine(drawContext, client, prefix, currentX, y, config.coordinatesColor);
             currentX += client.textRenderer.getWidth(prefix);
 
-            // рендеримо X (червоний)
             renderTextLine(drawContext, client, parts[0], currentX, y, config.coordinatesXColor);
-            currentX += client.textRenderer.getWidth(parts[0] + " ");
+            currentX += client.textRenderer.getWidth(parts[0]) + spacing;
 
-            // рендеримо Y (зелений)
+            renderTextLine(drawContext, client, " ", currentX, y, config.coordinatesColor);
+            currentX += client.textRenderer.getWidth(" ");
+
             renderTextLine(drawContext, client, parts[1], currentX, y, config.coordinatesYColor);
-            currentX += client.textRenderer.getWidth(parts[1] + " ");
+            currentX += client.textRenderer.getWidth(parts[1]) + spacing;
 
-            // рендеримо Z (синій)
+            renderTextLine(drawContext, client, " ", currentX, y, config.coordinatesColor);
+            currentX += client.textRenderer.getWidth(" ");
+
             renderTextLine(drawContext, client, parts[2], currentX, y, config.coordinatesZColor);
         } else {
-            // запасний варіант - звичайний рендеринг
             renderTextLine(drawContext, client, text, x, y, config.coordinatesColor);
         }
     }

@@ -165,5 +165,11 @@
   "text.optimizationmod.hud_position.top_left": "Góra-Lewo",
   "text.optimizationmod.hud_position.top_right": "Góra-Prawo",
   "text.optimizationmod.hud_position.bottom_left": "Dół-Lewo",
-  "text.optimizationmod.hud_position.bottom_right": "Dół-Prawo"
+  "text.optimizationmod.hud_position.bottom_right": "Dół-Prawo",
+
+  "text.optimizationmod.hud.days": "Tage: %d",
+  "text.optimizationmod.option.show_days": "Tage anzeigen",
+  "text.optimizationmod.option.show_days.tooltip": "Weltentage-Zähler anzeigen",
+  "text.optimizationmod.option.days_color": "Tagefarbe",
+  "text.optimizationmod.option.days_color.tooltip": "Farbe für Tage-Zähler"
 }

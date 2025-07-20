@@ -165,5 +165,11 @@
   "text.optimizationmod.hud_position.top_left": "左上",
   "text.optimizationmod.hud_position.top_right": "右上",
   "text.optimizationmod.hud_position.bottom_left": "左下",
-  "text.optimizationmod.hud_position.bottom_right": "右下"
+  "text.optimizationmod.hud_position.bottom_right": "右下",
+
+  "text.optimizationmod.hud.days": "天数: %d",
+  "text.optimizationmod.option.show_days": "显示天数",
+  "text.optimizationmod.option.show_days.tooltip": "显示世界天数计数器",
+  "text.optimizationmod.option.days_color": "天数颜色",
+  "text.optimizationmod.option.days_color.tooltip": "天数计数器的颜色"
 }

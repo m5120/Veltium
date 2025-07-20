@@ -165,5 +165,11 @@
   "text.optimizationmod.hud_position.top_left": "Góra-Lewo",
   "text.optimizationmod.hud_position.top_right": "Góra-Prawo",
   "text.optimizationmod.hud_position.bottom_left": "Dół-Lewo",
-  "text.optimizationmod.hud_position.bottom_right": "Dół-Prawo"
+  "text.optimizationmod.hud_position.bottom_right": "Dół-Prawo",
+
+  "text.optimizationmod.hud.days": "Dni: %d",
+  "text.optimizationmod.option.show_days": "Pokaż dni",
+  "text.optimizationmod.option.show_days.tooltip": "Wyświetl licznik dni świata",
+  "text.optimizationmod.option.days_color": "Kolor dni",
+  "text.optimizationmod.option.days_color.tooltip": "Kolor licznika dni"
 }

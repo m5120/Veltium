@@ -54,6 +54,7 @@ public class YACLConfig {
     public boolean showPing = false;
     public boolean showCoordinates = true;
     public boolean showTime = false;
+    public boolean showDays = false;
 
     // === РОЗШИРЕНА СТАТИСТИКА ===
     public boolean showAdvancedFps = false;
@@ -100,6 +101,10 @@ public class YACLConfig {
 
     // Колір часу
     public int timeColor = 0xFFFFFF;
+    // Колір днів
+    public int daysColor = 0xFFFF55;
+
+
 
     // === ENUM ДЛЯ ПОЗИЦІЙ HUD ===
     public enum HudPosition implements NameableEnum {
@@ -228,6 +233,7 @@ public class YACLConfig {
         this.showPing = other.showPing;
         this.showCoordinates = other.showCoordinates;
         this.showTime = other.showTime;
+        this.showDays = other.showDays;
         this.showAdvancedFps = other.showAdvancedFps;
         this.showAdvancedMemory = other.showAdvancedMemory;
         this.showAdvancedPing = other.showAdvancedPing;
@@ -256,6 +262,7 @@ public class YACLConfig {
         this.coordinatesYColor = other.coordinatesYColor;
         this.coordinatesZColor = other.coordinatesZColor;
         this.timeColor = other.timeColor;
+        this.daysColor = other.daysColor;
     }
 
     // === ГРАФІЧНИЙ ІНТЕРФЕЙС ===
@@ -324,6 +331,12 @@ public class YACLConfig {
                                 false,
                                 () -> config.showTime,
                                 val -> config.showTime = val))
+                        .option(createBooleanOption(
+                                "text.optimizationmod.option.show_days",
+                                "text.optimizationmod.option.show_days.tooltip",
+                                false,
+                                () -> config.showDays,
+                                val -> config.showDays = val))
 
                         // Розширена статистика
                         .option(LabelOption.create(Text.translatable("text.optimizationmod.separator.advanced_stats")))
@@ -413,7 +426,7 @@ public class YACLConfig {
                                 .name(Text.translatable("text.optimizationmod.option.hud_text_opacity"))
                                 .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_text_opacity.tooltip")))
                                 .binding(1.0f, () -> config.hudTextOpacity, val -> config.hudTextOpacity = val)
-                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.1f, 1.0f).step(0.1f))
+                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.3f, 1.0f).step(0.1f))
                                 .build())
 
                         // Кольори
@@ -466,6 +479,14 @@ public class YACLConfig {
                                 0xFFFFFF,
                                 () -> config.timeColor,
                                 val -> config.timeColor = val))
+
+                        // time_color 0.1.8
+                        .option(createColorOption(
+                                "text.optimizationmod.option.days_color",
+                                "text.optimizationmod.option.days_color.tooltip",
+                                0xFFFF55,
+                                () -> config.daysColor,
+                                val -> config.daysColor = val))
 
                         // Кольорові групи
                         .group(createFpsColorGroup(config))
