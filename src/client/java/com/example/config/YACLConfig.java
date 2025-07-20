@@ -482,21 +482,21 @@ public class YACLConfig {
                         .option(Option.<Integer>createBuilder()
                                 .name(Text.translatable("text.optimizationmod.option.optimization_level"))
                                 .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.optimization_level.tooltip")))
-                                .binding(2, () -> config.optimizationLevel, val -> config.optimizationLevel = val)
+                                .binding(0, () -> config.optimizationLevel, val -> config.optimizationLevel = val)
                                 .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 3).step(1))
                                 .build())
 
                         .option(createBooleanOption(
                                 "text.optimizationmod.option.reduce_lag",
                                 "text.optimizationmod.option.reduce_lag.tooltip",
-                                true,
+                                false,
                                 () -> config.reduceLag,
                                 val -> config.reduceLag = val))
 
                         .option(createBooleanOption(
                                 "text.optimizationmod.option.optimize_rendering",
                                 "text.optimizationmod.option.optimize_rendering.tooltip",
-                                true,
+                                false,
                                 () -> config.optimizeRendering,
                                 val -> config.optimizeRendering = val))
 
@@ -510,14 +510,14 @@ public class YACLConfig {
                         .option(createBooleanOption(
                                 "text.optimizationmod.option.entity_culling",
                                 "text.optimizationmod.option.entity_culling.tooltip",
-                                true,
+                                false,
                                 () -> config.enableEntityCulling,
                                 val -> config.enableEntityCulling = val))
 
                         .option(createBooleanOption(
                                 "text.optimizationmod.option.optimize_chunks",
                                 "text.optimizationmod.option.optimize_chunks.tooltip",
-                                true,
+                                false,
                                 () -> config.optimizeChunks,
                                 val -> config.optimizeChunks = val))
 

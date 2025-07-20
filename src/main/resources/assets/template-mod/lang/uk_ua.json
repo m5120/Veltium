@@ -10,11 +10,11 @@
   "text.optimizationmod.no": "Ні",
 
   "text.optimizationmod.hud.fps": "%d к/с",
-  "text.optimizationmod.hud.fps_stats": "%d к/с (min%d avg%d max%d)",
+  "text.optimizationmod.hud.fps_stats": "%d к/с [min%d avg%d max%d]",
   "text.optimizationmod.hud.memory": "Пам'ять: %dМБ/%dМБ (%d%%)",
-  "text.optimizationmod.hud.memory_stats": "Пам'ять: %s%% (min%s avg%s max%s)",
+  "text.optimizationmod.hud.memory_stats": "Пам'ять: %s [min%s avg%s max%s]",
   "text.optimizationmod.hud.ping": "Пінг: %dмс",
-  "text.optimizationmod.hud.ping_stats": "Пінг: %dмс (min%d avg%d max%d)",
+  "text.optimizationmod.hud.ping_stats": "Пінг: %dмс [min%d avg%d max%d]",
   "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
   "text.optimizationmod.hud.time": "%s",
 

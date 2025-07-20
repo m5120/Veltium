@@ -10,11 +10,11 @@
   "text.optimizationmod.no": "Nein",
 
   "text.optimizationmod.hud.fps": "%d FPS",
-  "text.optimizationmod.hud.fps_stats": "%d FPS (min%d avg%d max%d)",
+  "text.optimizationmod.hud.fps_stats": "%d FPS [min%d avg%d max%d]",
   "text.optimizationmod.hud.memory": "Speicher: %dMB/%dMB (%d%%)",
-  "text.optimizationmod.hud.memory_stats": "Speicher: %s%% (min%s avg%s max%s)",
+  "text.optimizationmod.hud.memory_stats": "Speicher: %s [min%s avg%s max%s]",
   "text.optimizationmod.hud.ping": "Ping: %dms",
-  "text.optimizationmod.hud.ping_stats": "Ping: %dms (min%d avg%d max%d)",
+  "text.optimizationmod.hud.ping_stats": "Ping: %dms [min%d avg%d max%d]",
   "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
   "text.optimizationmod.hud.time": "%s",
 

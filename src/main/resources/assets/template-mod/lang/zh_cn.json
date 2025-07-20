@@ -10,11 +10,11 @@
   "text.optimizationmod.no": "否",
 
   "text.optimizationmod.hud.fps": "%d帧",
-  "text.optimizationmod.hud.fps_stats": "%d帧 (min%d avg%d max%d)",
+  "text.optimizationmod.hud.fps_stats": "%d帧 [min%d avg%d max%d]",
   "text.optimizationmod.hud.memory": "内存: %dMB/%dMB (%d%%)",
-  "text.optimizationmod.hud.memory_stats": "内存: %s%% (min%s avg%s max%s)",
+  "text.optimizationmod.hud.memory_stats": "内存: %s [min%s avg%s max%s]",
   "text.optimizationmod.hud.ping": "延迟: %dms",
-  "text.optimizationmod.hud.ping_stats": "延迟: %dms (min%d avg%d max%d)",
+  "text.optimizationmod.hud.ping_stats": "延迟: %dms [min%d avg%d max%d]",
   "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
   "text.optimizationmod.hud.time": "%s",
 
