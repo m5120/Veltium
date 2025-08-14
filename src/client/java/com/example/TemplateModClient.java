@@ -123,12 +123,12 @@ public class TemplateModClient implements ClientModInitializer {
         }
 
         // застосовуємо масштаб
-        drawContext.getMatrices().push();
-        drawContext.getMatrices().scale(config.hudScale, config.hudScale, 1.0F);
+        drawContext.getMatrices().pushMatrix();
+        drawContext.getMatrices().scale(config.hudScale, config.hudScale);
 
         renderHudElements(drawContext, client);
 
-        drawContext.getMatrices().pop();
+        drawContext.getMatrices().popMatrix();
     }
 
     private void updateStatistics(MinecraftClient client) {

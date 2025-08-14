@@ -18,6 +18,8 @@
   "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
   "text.optimizationmod.hud.time": "%s",
 
+  "text.optimizationmod.separator.main_settings": "Основні налаштування",
+
   "text.optimizationmod.category.hud": "Налаштування HUD",
   "text.optimizationmod.category.hud.tooltip": "Налаштування відображення інформації на екрані",
 

@@ -38,7 +38,7 @@ public class YACLConfig {
     public int optimizationLevel = 0;
     public int maxParticles = 100;
 
-    // === ОПТИМІЗАЦІЯ БІЛЬШІСТЬ false ТОМУ-ЩО ЦЕ ДОСИТЬ ПОГАНА ОПТИМІЗАЦІЯ І НЕСТАБІЛЬНА ===
+    // === ОПТИМІЗАЦІЯ БІЛЬШІСТЬ false ТОМУ-ЩО ЦЕ ДОСИТЬ ПІДГАН ОПТИМІЗАЦІЯ А НЕСТАБІЛЬНА ===
     public boolean reduceLag = false;
     public boolean optimizeRendering = false;
     public boolean cullParticles = true;
@@ -277,166 +277,201 @@ public class YACLConfig {
                         .name(Text.translatable("text.optimizationmod.category.hud"))
                         .tooltip(Text.translatable("text.optimizationmod.category.hud.tooltip"))
 
-                        // Головний перемикач
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.mod_enabled",
-                                "text.optimizationmod.option.mod_enabled.tooltip",
-                                true,
-                                () -> config.modEnabled,
-                                val -> config.modEnabled = val))
+                        // Основні налаштування
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("text.optimizationmod.separator.main_settings"))
+                                .collapsed(false)
 
-                        // Сповіщення
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_notifications",
-                                "text.optimizationmod.option.show_notifications.tooltip",
-                                true,
-                                () -> config.showNotifications,
-                                val -> config.showNotifications = val))
+                                // Головний перемикач
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.mod_enabled",
+                                        "text.optimizationmod.option.mod_enabled.tooltip",
+                                        true,
+                                        () -> config.modEnabled,
+                                        val -> config.modEnabled = val))
 
-                        // Роздільник
-                        .option(LabelOption.create(Text.translatable("text.optimizationmod.separator.hud_elements")))
+                                // Сповіщення
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_notifications",
+                                        "text.optimizationmod.option.show_notifications.tooltip",
+                                        true,
+                                        () -> config.showNotifications,
+                                        val -> config.showNotifications = val))
+                                .build())
 
                         // Елементи HUD
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_fps",
-                                "text.optimizationmod.option.show_fps.tooltip",
-                                true,
-                                () -> config.showFpsCounter,
-                                val -> config.showFpsCounter = val))
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("text.optimizationmod.separator.hud_elements"))
+                                .collapsed(false)
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_memory",
-                                "text.optimizationmod.option.show_memory.tooltip",
-                                false,
-                                () -> config.showMemoryUsage,
-                                val -> config.showMemoryUsage = val))
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_fps",
+                                        "text.optimizationmod.option.show_fps.tooltip",
+                                        true,
+                                        () -> config.showFpsCounter,
+                                        val -> config.showFpsCounter = val))
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_ping",
-                                "text.optimizationmod.option.show_ping.tooltip",
-                                false,
-                                () -> config.showPing,
-                                val -> config.showPing = val))
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_memory",
+                                        "text.optimizationmod.option.show_memory.tooltip",
+                                        false,
+                                        () -> config.showMemoryUsage,
+                                        val -> config.showMemoryUsage = val))
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_coordinates",
-                                "text.optimizationmod.option.show_coordinates.tooltip",
-                                true,
-                                () -> config.showCoordinates,
-                                val -> config.showCoordinates = val))
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_ping",
+                                        "text.optimizationmod.option.show_ping.tooltip",
+                                        false,
+                                        () -> config.showPing,
+                                        val -> config.showPing = val))
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_time",
-                                "text.optimizationmod.option.show_time.tooltip",
-                                false,
-                                () -> config.showTime,
-                                val -> config.showTime = val))
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_days",
-                                "text.optimizationmod.option.show_days.tooltip",
-                                false,
-                                () -> config.showDays,
-                                val -> config.showDays = val))
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_coordinates",
+                                        "text.optimizationmod.option.show_coordinates.tooltip",
+                                        true,
+                                        () -> config.showCoordinates,
+                                        val -> config.showCoordinates = val))
+
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_time",
+                                        "text.optimizationmod.option.show_time.tooltip",
+                                        false,
+                                        () -> config.showTime,
+                                        val -> config.showTime = val))
+
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_days",
+                                        "text.optimizationmod.option.show_days.tooltip",
+                                        false,
+                                        () -> config.showDays,
+                                        val -> config.showDays = val))
+                                .build())
 
                         // Розширена статистика
-                        .option(LabelOption.create(Text.translatable("text.optimizationmod.separator.advanced_stats")))
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("text.optimizationmod.separator.advanced_stats"))
+                                .collapsed(false)
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_advanced_fps",
-                                "text.optimizationmod.option.show_advanced_fps.tooltip",
-                                false,
-                                () -> config.showAdvancedFps,
-                                val -> config.showAdvancedFps = val))
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_advanced_fps",
+                                        "text.optimizationmod.option.show_advanced_fps.tooltip",
+                                        false,
+                                        () -> config.showAdvancedFps,
+                                        val -> config.showAdvancedFps = val))
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_advanced_memory",
-                                "text.optimizationmod.option.show_advanced_memory.tooltip",
-                                false,
-                                () -> config.showAdvancedMemory,
-                                val -> config.showAdvancedMemory = val))
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_advanced_memory",
+                                        "text.optimizationmod.option.show_advanced_memory.tooltip",
+                                        false,
+                                        () -> config.showAdvancedMemory,
+                                        val -> config.showAdvancedMemory = val))
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.show_advanced_ping",
-                                "text.optimizationmod.option.show_advanced_ping.tooltip",
-                                false,
-                                () -> config.showAdvancedPing,
-                                val -> config.showAdvancedPing = val))
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_advanced_ping",
+                                        "text.optimizationmod.option.show_advanced_ping.tooltip",
+                                        false,
+                                        () -> config.showAdvancedPing,
+                                        val -> config.showAdvancedPing = val))
+                                .build())
 
                         // Розмір та позиція
-                        .option(LabelOption.create(Text.translatable("text.optimizationmod.separator.size_position")))
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("text.optimizationmod.separator.size_position"))
+                                .collapsed(false)
 
-                        .option(Option.<Float>createBuilder()
-                                .name(Text.translatable("text.optimizationmod.option.hud_scale"))
-                                .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_scale.tooltip")))
-                                .binding(1.0f, () -> config.hudScale, val -> config.hudScale = val)
-                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.5f, 3.0f).step(0.1f))
+                                .option(Option.<Float>createBuilder()
+                                        .name(Text.translatable("text.optimizationmod.option.hud_scale"))
+                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_scale.tooltip")))
+                                        .binding(1.0f, () -> config.hudScale, val -> config.hudScale = val)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.5f, 3.0f).step(0.1f))
+                                        .build())
+
+                                // HUD Position як перемикач
+                                .option(Option.<HudPosition>createBuilder()
+                                        .name(Text.translatable("text.optimizationmod.option.hud_position"))
+                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_position.tooltip")))
+                                        .binding(HudPosition.TOP_LEFT,
+                                                () -> config.hudPosition,
+                                                val -> config.hudPosition = val)
+                                        .controller(opt -> CyclingListControllerBuilder.create(opt)
+                                                .values(java.util.Arrays.asList(HudPosition.values()))
+                                                .formatValue(pos -> pos.getDisplayName()))
+                                        .build())
+
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.corner_snap",
+                                        "text.optimizationmod.option.corner_snap.tooltip",
+                                        false,
+                                        () -> config.cornerSnap,
+                                        val -> config.cornerSnap = val))
+
+                                .option(Option.<Integer>createBuilder()
+                                        .name(Text.translatable("text.optimizationmod.option.hud_x"))
+                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_x.tooltip")))
+                                        .binding(10, () -> config.hudX, val -> config.hudX = val)
+                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
+                                        .build())
+
+                                .option(Option.<Integer>createBuilder()
+                                        .name(Text.translatable("text.optimizationmod.option.hud_y"))
+                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_y.tooltip")))
+                                        .binding(10, () -> config.hudY, val -> config.hudY = val)
+                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
+                                        .build())
                                 .build())
 
-                        // HUD Position як перемикач
-                        .option(Option.<HudPosition>createBuilder()
-                                .name(Text.translatable("text.optimizationmod.option.hud_position"))
-                                .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_position.tooltip")))
-                                .binding(HudPosition.TOP_LEFT,
-                                        () -> config.hudPosition,
-                                        val -> config.hudPosition = val)
-                                .controller(opt -> CyclingListControllerBuilder.create(opt)
-                                        .values(java.util.Arrays.asList(HudPosition.values()))
-                                        .formatValue(pos -> pos.getDisplayName()))
+                        // Зовнішній вигляд тексту
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("text.optimizationmod.separator.text_appearance"))
+                                .collapsed(false)
+
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.hud_shadow",
+                                        "text.optimizationmod.option.hud_shadow.tooltip",
+                                        true,
+                                        () -> config.hudShadow,
+                                        val -> config.hudShadow = val))
+
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.hud_bold",
+                                        "text.optimizationmod.option.hud_bold.tooltip",
+                                        false,
+                                        () -> config.hudBold,
+                                        val -> config.hudBold = val))
+
+                                .option(Option.<Float>createBuilder()
+                                        .name(Text.translatable("text.optimizationmod.option.hud_text_opacity"))
+                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_text_opacity.tooltip")))
+                                        .binding(1.0f, () -> config.hudTextOpacity, val -> config.hudTextOpacity = val)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.3f, 1.0f).step(0.1f))
+                                        .build())
                                 .build())
 
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.corner_snap",
-                                "text.optimizationmod.option.corner_snap.tooltip",
-                                false,
-                                () -> config.cornerSnap,
-                                val -> config.cornerSnap = val))
+                        // Основні кольори
+                        .group(OptionGroup.createBuilder()
+                                .name(Text.translatable("text.optimizationmod.separator.colors"))
+                                .collapsed(false)
 
-                        .option(Option.<Integer>createBuilder()
-                                .name(Text.translatable("text.optimizationmod.option.hud_x"))
-                                .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_x.tooltip")))
-                                .binding(10, () -> config.hudX, val -> config.hudX = val)
-                                .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
-                                .build())
+                                .option(Option.<Color>createBuilder()
+                                        .name(Text.translatable("text.optimizationmod.option.coordinates_color"))
+                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.coordinates_color.tooltip")))
+                                        .binding(intToColor(0xFFFFFF), () -> intToColor(config.coordinatesColor), val -> config.coordinatesColor = colorToInt(val))
+                                        .controller(ColorControllerBuilder::create)
+                                        .build())
 
-                        .option(Option.<Integer>createBuilder()
-                                .name(Text.translatable("text.optimizationmod.option.hud_y"))
-                                .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_y.tooltip")))
-                                .binding(10, () -> config.hudY, val -> config.hudY = val)
-                                .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
-                                .build())
+                                .option(createColorOption(
+                                        "text.optimizationmod.option.time_color",
+                                        "text.optimizationmod.option.time_color.tooltip",
+                                        0xFFFFFF,
+                                        () -> config.timeColor,
+                                        val -> config.timeColor = val))
 
-                        // Зовнішній вигляд
-                        .option(LabelOption.create(Text.translatable("text.optimizationmod.separator.text_appearance")))
-
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.hud_shadow",
-                                "text.optimizationmod.option.hud_shadow.tooltip",
-                                true,
-                                () -> config.hudShadow,
-                                val -> config.hudShadow = val))
-
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.hud_bold",
-                                "text.optimizationmod.option.hud_bold.tooltip",
-                                false,
-                                () -> config.hudBold,
-                                val -> config.hudBold = val))
-
-                        .option(Option.<Float>createBuilder()
-                                .name(Text.translatable("text.optimizationmod.option.hud_text_opacity"))
-                                .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_text_opacity.tooltip")))
-                                .binding(1.0f, () -> config.hudTextOpacity, val -> config.hudTextOpacity = val)
-                                .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.3f, 1.0f).step(0.1f))
-                                .build())
-
-                        // Кольори
-                        .option(LabelOption.create(Text.translatable("text.optimizationmod.separator.colors")))
-
-                        .option(Option.<Color>createBuilder()
-                                .name(Text.translatable("text.optimizationmod.option.coordinates_color"))
-                                .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.coordinates_color.tooltip")))
-                                .binding(intToColor(0xFFFFFF), () -> intToColor(config.coordinatesColor), val -> config.coordinatesColor = colorToInt(val))
-                                .controller(ColorControllerBuilder::create)
+                                .option(createColorOption(
+                                        "text.optimizationmod.option.days_color",
+                                        "text.optimizationmod.option.days_color.tooltip",
+                                        0xFFFF55,
+                                        () -> config.daysColor,
+                                        val -> config.daysColor = val))
                                 .build())
 
                         // Кольори координат
@@ -472,21 +507,6 @@ public class YACLConfig {
                                         () -> config.coordinatesZColor,
                                         val -> config.coordinatesZColor = val))
                                 .build())
-
-                        .option(createColorOption(
-                                "text.optimizationmod.option.time_color",
-                                "text.optimizationmod.option.time_color.tooltip",
-                                0xFFFFFF,
-                                () -> config.timeColor,
-                                val -> config.timeColor = val))
-
-                        // time_color 0.1.8
-                        .option(createColorOption(
-                                "text.optimizationmod.option.days_color",
-                                "text.optimizationmod.option.days_color.tooltip",
-                                0xFFFF55,
-                                () -> config.daysColor,
-                                val -> config.daysColor = val))
 
                         // Кольорові групи
                         .group(createFpsColorGroup(config))

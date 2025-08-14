@@ -18,6 +18,8 @@
   "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
   "text.optimizationmod.hud.time": "%s",
 
+  "text.optimizationmod.separator.main_settings": "主要设置",
+
   "text.optimizationmod.category.hud": "HUD设置",
   "text.optimizationmod.category.hud.tooltip": "屏幕信息显示设置",
 

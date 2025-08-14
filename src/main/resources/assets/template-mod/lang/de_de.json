@@ -18,6 +18,8 @@
   "text.optimizationmod.hud.coordinates": "XYZ: %.1f %.1f %.1f",
   "text.optimizationmod.hud.time": "%s",
 
+  "text.optimizationmod.separator.main_settings": "Haupteinstellungen",
+
   "text.optimizationmod.category.hud": "HUD Einstellungen",
   "text.optimizationmod.category.hud.tooltip": "Bildschirminformations-Anzeigeeinstellungen",
 
