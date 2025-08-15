@@ -125,9 +125,7 @@ public class TemplateModClient implements ClientModInitializer {
         // застосовуємо масштаб
         drawContext.getMatrices().pushMatrix();
         drawContext.getMatrices().scale(config.hudScale, config.hudScale);
-
         renderHudElements(drawContext, client);
-
         drawContext.getMatrices().popMatrix();
     }
 

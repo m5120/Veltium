@@ -32,7 +32,7 @@
   "text.optimizationmod.separator.advanced_stats": "高级统计",
   "text.optimizationmod.separator.size_position": "大小和位置",
   "text.optimizationmod.separator.text_appearance": "文本外观",
-  "text.optimizationmod.separator.colors": "颜色",
+  "text.optimizationmod.separator.colors": "主色",
 
   "text.optimizationmod.option.mod_enabled": "启用模组",
   "text.optimizationmod.option.mod_enabled.tooltip": "主开关，用于启用/禁用整个模组",

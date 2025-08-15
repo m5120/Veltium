@@ -57,7 +57,6 @@ public class WorldRenderMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void optimizeWorldRender(CallbackInfo ci) {
-        // якщо оптимізація увімкнена або pojav лаунчер
         if (TemplateModClient.config.optimizationLevel >= 1 || isPojavLauncher) {
             long currentTime = System.currentTimeMillis();
             frameCounter++;

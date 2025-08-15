@@ -32,7 +32,7 @@
   "text.optimizationmod.separator.advanced_stats": "Erweiterte Statistiken",
   "text.optimizationmod.separator.size_position": "Größe & Position",
   "text.optimizationmod.separator.text_appearance": "Text-Aussehen",
-  "text.optimizationmod.separator.colors": "Farben",
+  "text.optimizationmod.separator.colors": "Hauptfarben",
 
   "text.optimizationmod.option.mod_enabled": "Mod aktivieren",
   "text.optimizationmod.option.mod_enabled.tooltip": "Hauptschalter zum Aktivieren/Deaktivieren der gesamten Mod",
