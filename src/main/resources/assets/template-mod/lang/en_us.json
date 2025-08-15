@@ -32,7 +32,7 @@
   "text.optimizationmod.separator.advanced_stats": "Advanced Statistics",
   "text.optimizationmod.separator.size_position": "Size & Position",
   "text.optimizationmod.separator.text_appearance": "Text Appearance",
-  "text.optimizationmod.separator.colors": "Colors",
+  "text.optimizationmod.separator.colors": "Main Colors",
 
   "text.optimizationmod.option.mod_enabled": "Enable Mod",
   "text.optimizationmod.option.mod_enabled.tooltip": "Main toggle to enable/disable the entire mod",

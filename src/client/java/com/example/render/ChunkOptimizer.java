@@ -26,7 +26,7 @@ public class ChunkOptimizer {
     private final Map<Long, Integer> chunkPriority = new ConcurrentHashMap<>();
     private final Map<Long, Long> lastUpdateTime = new ConcurrentHashMap<>();
 
-    // система лод щоб далекі чанки рендерились простіше
+    // система лод щоб далекі чанки рендерились простіше (Погано працює)
     private final Map<Long, Integer> chunkLOD = new ConcurrentHashMap<>();
     private final int[] LOD_DISTANCES = {4, 8, 16, 24, 32};
     private final float[] LOD_DETAIL = {1.0f, 0.8f, 0.6f, 0.4f, 0.2f};
@@ -53,9 +53,8 @@ public class ChunkOptimizer {
     }
 
     public void optimizeChunks(MinecraftClient client) {
-        // базова перевірка - якщо оптимізація взагалі вимкнена то нащо робити?
         if (!config.shouldOptimizeChunks() || client.world == null || client.player == null) {
-            return; // просто виходимо
+            return;
         }
 
         long currentTime = System.currentTimeMillis();
@@ -96,7 +95,7 @@ public class ChunkOptimizer {
             lastCamera = camera;
             cameraPos = camera.getPos();
 
-            // рахуємо куди дивится камера (матиматика)
+            // рахуємо куди дивится камера
             float yaw = camera.getYaw();
             float pitch = camera.getPitch();
 
@@ -149,7 +148,7 @@ public class ChunkOptimizer {
         try {
             WorldChunk chunk = world.getChunk(chunkX, chunkZ);
             if (chunk == null) {
-                culledChunks.add(chunkPos); // чанк не існує - пропускаємо
+                culledChunks.add(chunkPos);
                 return;
             }
 
@@ -175,7 +174,6 @@ public class ChunkOptimizer {
             }
 
         } catch (Exception e) {
-            // якщо щось пішло не так то просто пропускаємо цей чанк
             culledChunks.add(chunkPos);
         }
     }
@@ -189,9 +187,9 @@ public class ChunkOptimizer {
             return data;
         }
 
-        // детальний аналіз робимо залежно від відстані та налаштувань
+        // детальний настройки що робити залежно від відстані та налаштувань
         int baseSampleRate = getAnalysisSampleRate();
-        int sampleRate = Math.max(1, baseSampleRate + distance / 4); // далі = менше деталей
+        int sampleRate = Math.max(1, baseSampleRate + distance / 4);
         int totalBlocks = 0;
         int airBlocks = 0;
         int solidBlocks = 0;

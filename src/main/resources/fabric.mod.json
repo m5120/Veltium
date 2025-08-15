@@ -3,13 +3,14 @@
 	"id": "veltium-mod",
 	"version": "${version}",
 	"name": "Veltium",
-	"description": "Better FPS, memory, ping, and coordinates HUD mod for Minecraft.",
+	"description": "Shows FPS, memory usage, ping, coordinates, real time, and days – HUD mod for Minecraft",
 	"authors": [
 		"5120"
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/veltium",
-		"sources": "https://github.com/m5120/Veltium"
+		"sources": "https://github.com/m5120/Veltium",
+		"issues": "https://github.com/m5120/Veltium/issues"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/template-mod/icon.png",
@@ -35,9 +36,11 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.16.14",
-		"minecraft": ">=1.21.6 <1.22",
+		"minecraft": ">=1.21.2 <=1.21.5",
 		"java": ">=21",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"yet_another_config_lib_v3": "*"
+
 	},
 	"suggests": {
 		"modmenu": "*"

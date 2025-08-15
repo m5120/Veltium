@@ -32,7 +32,7 @@
   "text.optimizationmod.separator.advanced_stats": "Розширена статистика",
   "text.optimizationmod.separator.size_position": "Розмір і позиція",
   "text.optimizationmod.separator.text_appearance": "Вигляд тексту",
-  "text.optimizationmod.separator.colors": "Кольори",
+  "text.optimizationmod.separator.colors": "Основні кольори",
 
   "text.optimizationmod.option.mod_enabled": "Увімкнути мод",
   "text.optimizationmod.option.mod_enabled.tooltip": "Головний перемикач для вимкнення/увімкнення всього мода",

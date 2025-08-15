@@ -184,7 +184,7 @@ public class EntityRenderMixin {
     private void veltiumCleanupOldEntities(long currentTime) {
         if (currentTime - veltiumLastCleanup < 5000) return;
 
-        // видаляємо дані про ентитки які вже не існують або давно не рендерились
+        // видаляємо застарілі дані
         veltiumEntityData.entrySet().removeIf(entry -> {
             Entity entity = entry.getKey();
             return entity.isRemoved() || currentTime - entry.getValue().veltiumLastRenderTime > 30000;
@@ -193,7 +193,7 @@ public class EntityRenderMixin {
         veltiumLastCleanup = currentTime;
     }
 
-    // просто клас для зберігання даних про ентитку
+    // зберігання даних
     private static class VeltiumEntityRenderData {
         long veltiumLastRenderTime = 0;
         long veltiumLastMovementTime = 0;

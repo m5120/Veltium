@@ -67,9 +67,9 @@ public class ParticleMixin {
 
     private int veltiumGetCullRate(int fps) {
         // чим менше фпс тим більше ріжемо
-        if (fps < 20) return 5; // дуже погано
+        if (fps < 20) return 5; // погано
         if (fps < 40) return 3; // так собі
-        if (fps < 60) return 2; // майже норм
+        if (fps < 60) return 2; // норм
         return 1; // все ок
     }
 }
