@@ -2,7 +2,7 @@ package com.example.mixin.client;
 
 import com.example.TemplateModClient;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -17,9 +17,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
-@Mixin(EntityRenderDispatcher.class)
+@Mixin(EntityRenderer.class)
 public class EntityRenderMixin {
-    // мапа для зберігання даних про ентитки, щоб не лагало
     private static final Map<Entity, VeltiumEntityRenderData> veltiumEntityData = new ConcurrentHashMap<>();
     private static long veltiumLastCleanup = 0;
 
@@ -35,22 +34,18 @@ public class EntityRenderMixin {
 
         VeltiumEntityRenderData data = veltiumEntityData.computeIfAbsent(entity, e -> new VeltiumEntityRenderData());
 
-        // якщо ентитка далеко або не треба її рендерити - скіпаємо
         if (veltiumShouldCullEntity(entity, client, distanceSquared, currentTime, data)) {
             ci.cancel();
             return;
         }
 
         data.veltiumLastRenderTime = currentTime;
-
-        // прибираємо старі дані щоб не засмічувати пам'ять
         veltiumCleanupOldEntities(currentTime);
     }
 
     private boolean veltiumShouldCullEntity(Entity entity, MinecraftClient client, double distanceSquared, long currentTime, VeltiumEntityRenderData data) {
         int optimizationLevel = TemplateModClient.config.optimizationLevel;
 
-        // для різних типів ентиток різні правила
         if (entity instanceof PlayerEntity) {
             return veltiumShouldCullPlayer(entity, distanceSquared, currentTime, data, optimizationLevel);
         }
@@ -65,12 +60,10 @@ public class EntityRenderMixin {
     private boolean veltiumShouldCullPlayer(Entity entity, double distanceSquared, long currentTime, VeltiumEntityRenderData data, int optimizationLevel) {
         if (optimizationLevel < 2) return false;
 
-        // дуже далеких гравців можна рендерити рідше
         if (distanceSquared > 16384) {
             return currentTime - data.veltiumLastRenderTime < 200;
         }
 
-        // середня дистанція - теж не критично
         if (distanceSquared > 4096 && optimizationLevel >= 3) {
             return currentTime - data.veltiumLastRenderTime < 100;
         }
@@ -79,7 +72,6 @@ public class EntityRenderMixin {
     }
 
     private boolean veltiumShouldCullLivingEntity(LivingEntity entity, MinecraftClient client, double distanceSquared, long currentTime, VeltiumEntityRenderData data, int optimizationLevel) {
-        // якщо ентитка світиться або має кастомне ім'я - не чіпаємо
         if (entity.isGlowing() || entity.hasCustomName()) return false;
 
         if (optimizationLevel >= 2) {
@@ -87,12 +79,10 @@ public class EntityRenderMixin {
                 boolean isMoving = entity.getVelocity().lengthSquared() > 0.01;
                 boolean recentlyMoved = currentTime - data.veltiumLastMovementTime < 1000;
 
-                // якщо ентитка стоїть на місці - можна рендерити рідше
                 if (!isMoving && !recentlyMoved) {
                     return currentTime - data.veltiumLastRenderTime < veltiumGetUpdateInterval(distanceSquared, optimizationLevel);
                 }
 
-                // запамятовуємо коли вона рухалась останній раз
                 if (isMoving) {
                     data.veltiumLastMovementTime = currentTime;
                 }
@@ -100,15 +90,13 @@ public class EntityRenderMixin {
         }
 
         if (optimizationLevel >= 3) {
-            // тварини далеко не так важливі
             if (distanceSquared > 256 && entity instanceof AnimalEntity) {
                 if (!entity.isOnGround() && entity.getVelocity().y < -0.5) {
-                    return false; // падаючу тварину краще показати
+                    return false;
                 }
                 return currentTime - data.veltiumLastRenderTime < 150;
             }
 
-            // моби без цілі теж не критичні
             if (distanceSquared > 64 && entity instanceof MobEntity) {
                 MobEntity mob = (MobEntity) entity;
                 if (mob.getTarget() == null && mob.getVelocity().lengthSquared() < 0.001) {
@@ -118,7 +106,6 @@ public class EntityRenderMixin {
         }
 
         if (optimizationLevel >= 4) {
-            // якщо ентитка не в полі зору - навіщо її рендерити
             if (distanceSquared > 2304 && !veltiumIsEntityVisible(entity, client)) {
                 return currentTime - data.veltiumLastRenderTime < 500;
             }
@@ -130,7 +117,6 @@ public class EntityRenderMixin {
     private boolean veltiumShouldCullGenericEntity(Entity entity, MinecraftClient client, double distanceSquared, long currentTime, VeltiumEntityRenderData data, int optimizationLevel) {
         if (optimizationLevel < 2) return false;
 
-        // особливі ентитки завжди рендеримо
         if (entity.hasCustomName() || entity.isGlowing()) return false;
 
         if (distanceSquared > 2048) {
@@ -150,7 +136,6 @@ public class EntityRenderMixin {
     }
 
     private int veltiumGetUpdateInterval(double distanceSquared, int optimizationLevel) {
-        // чим далі ентитка тим рідше оновлюємо
         if (distanceSquared > 16384) return 400 + (optimizationLevel * 100);
         if (distanceSquared > 4096) return 200 + (optimizationLevel * 50);
         if (distanceSquared > 1024) return 100 + (optimizationLevel * 25);
@@ -161,13 +146,13 @@ public class EntityRenderMixin {
         if (client.gameRenderer == null || client.gameRenderer.getCamera() == null) return true;
 
         Vec3d cameraPos = client.gameRenderer.getCamera().getPos();
-        Vec3d entityPos = entity.getPos();
+        // Виправлено для 1.21.1:
+        Vec3d entityPos = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
         Vec3d direction = entityPos.subtract(cameraPos).normalize();
 
         float yaw = client.gameRenderer.getCamera().getYaw();
         float pitch = client.gameRenderer.getCamera().getPitch();
 
-        // математика для визначення чи видно ентитку
         double cameraYawRad = Math.toRadians(-yaw);
         double cameraPitchRad = Math.toRadians(-pitch);
 
@@ -178,13 +163,12 @@ public class EntityRenderMixin {
         );
 
         double dotProduct = direction.dotProduct(cameraDirection);
-        return dotProduct > 0.3; // якщо кут не дуже великий то видно
+        return dotProduct > 0.3;
     }
 
     private void veltiumCleanupOldEntities(long currentTime) {
         if (currentTime - veltiumLastCleanup < 5000) return;
 
-        // видаляємо застарілі дані
         veltiumEntityData.entrySet().removeIf(entry -> {
             Entity entity = entry.getKey();
             return entity.isRemoved() || currentTime - entry.getValue().veltiumLastRenderTime > 30000;
@@ -193,7 +177,6 @@ public class EntityRenderMixin {
         veltiumLastCleanup = currentTime;
     }
 
-    // зберігання даних
     private static class VeltiumEntityRenderData {
         long veltiumLastRenderTime = 0;
         long veltiumLastMovementTime = 0;

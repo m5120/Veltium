@@ -55,9 +55,12 @@ public class TemplateModClient implements ClientModInitializer {
     public void onInitializeClient() {
         config = YACLConfig.getInstance();
 
-        // початкова клавіша для конфігу (по замовчуванню O)
+        // початкова клавіша для конфігу (по замовчуванню O) 
         configKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.optimizationmod.config", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_O, "category.optimizationmod"));
+                "key.optimizationmod.config",
+                GLFW.GLFW_KEY_O,
+                KeyBinding.Category.MISC
+        ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             // показуємо повідомлення про завантаження
