@@ -17,6 +17,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -34,11 +35,18 @@ public class TemplateModClient implements ClientModInitializer {
     private boolean messageSent = false;
     private final List<ColoredText> hudLines = new ArrayList<>();
 
-    // статистики для мін/сер/макс
-    private final List<Integer> fpsHistory = new ArrayList<>();
-    private final List<Double> memoryHistory = new ArrayList<>();
-    private final List<Integer> pingHistory = new ArrayList<>();
+    // статистики для мін/сер/макс - використовуємо ArrayDeque для кращої продуктивності
+    private final ArrayDeque<Integer> fpsHistory = new ArrayDeque<>(MAX_HISTORY);
+    private final ArrayDeque<Double> memoryHistory = new ArrayDeque<>(MAX_HISTORY);
+    private final ArrayDeque<Integer> pingHistory = new ArrayDeque<>(MAX_HISTORY);
     private static final int MAX_HISTORY = 100;
+
+    // кешовані статистики для зменшення обчислень
+    private int cachedFpsMin, cachedFpsAvg, cachedFpsMax;
+    private double cachedMemoryMin, cachedMemoryAvg, cachedMemoryMax;
+    private int cachedPingMin, cachedPingAvg, cachedPingMax;
+    private long lastStatsUpdate = 0;
+    private static final long STATS_UPDATE_INTERVAL = 1000; // оновлюємо статистики раз на секунду
 
     // клас для збереження тексту з кольором
     private static class ColoredText {
@@ -55,7 +63,7 @@ public class TemplateModClient implements ClientModInitializer {
     public void onInitializeClient() {
         config = YACLConfig.getInstance();
 
-        // початкова клавіша для конфігу (по замовчуванню O) 
+        // початкова клавіша для конфігу (по замовчуванню O)
         configKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.optimizationmod.config",
                 GLFW.GLFW_KEY_O,
@@ -133,66 +141,71 @@ public class TemplateModClient implements ClientModInitializer {
     }
 
     private void updateStatistics(MinecraftClient client) {
+        long currentTime = System.currentTimeMillis();
+
         // збираємо статистику FPS
         int currentFps = client.getCurrentFps();
-        fpsHistory.add(currentFps);
-        if (fpsHistory.size() > MAX_HISTORY) {
+        if (fpsHistory.size() >= MAX_HISTORY) {
             fpsHistory.removeFirst();
         }
+        fpsHistory.addLast(currentFps);
 
         // збираємо статистику памяті
         Runtime runtime = Runtime.getRuntime();
         long usedMemory = runtime.totalMemory() - runtime.freeMemory();
         long maxMemory = runtime.maxMemory();
         double memoryUsagePercent = (double) usedMemory / maxMemory * 100.0;
-        memoryHistory.add(memoryUsagePercent);
-        if (memoryHistory.size() > MAX_HISTORY) {
+        if (memoryHistory.size() >= MAX_HISTORY) {
             memoryHistory.removeFirst();
         }
+        memoryHistory.addLast(memoryUsagePercent);
 
         // збираємо статистику пінгу
-        pingHistory.add(cachedPing);
-        if (pingHistory.size() > MAX_HISTORY) {
+        if (pingHistory.size() >= MAX_HISTORY) {
             pingHistory.removeFirst();
+        }
+        pingHistory.addLast(cachedPing);
+
+        // оновлюємо кешовані статистики тільки раз на секунду
+        if (currentTime - lastStatsUpdate > STATS_UPDATE_INTERVAL) {
+            updateCachedStats();
+            lastStatsUpdate = currentTime;
         }
     }
 
-    // методи для мін/сер/макс статистики
-    private int getFpsMin() {
-        return fpsHistory.isEmpty() ? 0 : Collections.min(fpsHistory);
+    private void updateCachedStats() {
+        // кешуємо FPS статистики
+        if (!fpsHistory.isEmpty()) {
+            cachedFpsMin = Collections.min(fpsHistory);
+            cachedFpsMax = Collections.max(fpsHistory);
+            cachedFpsAvg = (int) fpsHistory.stream().mapToInt(Integer::intValue).average().orElse(0);
+        }
+
+        // кешуємо Memory статистики
+        if (!memoryHistory.isEmpty()) {
+            cachedMemoryMin = Collections.min(memoryHistory);
+            cachedMemoryMax = Collections.max(memoryHistory);
+            cachedMemoryAvg = memoryHistory.stream().mapToDouble(Double::doubleValue).average().orElse(0);
+        }
+
+        // кешуємо Ping статистики
+        if (!pingHistory.isEmpty()) {
+            cachedPingMin = Collections.min(pingHistory);
+            cachedPingMax = Collections.max(pingHistory);
+            cachedPingAvg = (int) pingHistory.stream().mapToInt(Integer::intValue).average().orElse(0);
+        }
     }
 
-    private int getFpsAvg() {
-        return fpsHistory.isEmpty() ? 0 : (int) fpsHistory.stream().mapToInt(Integer::intValue).average().orElse(0);
-    }
-
-    private int getFpsMax() {
-        return fpsHistory.isEmpty() ? 0 : Collections.max(fpsHistory);
-    }
-
-    private double getMemoryMin() {
-        return memoryHistory.isEmpty() ? 0 : Collections.min(memoryHistory);
-    }
-
-    private double getMemoryAvg() {
-        return memoryHistory.isEmpty() ? 0 : memoryHistory.stream().mapToDouble(Double::doubleValue).average().orElse(0);
-    }
-
-    private double getMemoryMax() {
-        return memoryHistory.isEmpty() ? 0 : Collections.max(memoryHistory);
-    }
-
-    private int getPingMin() {
-        return pingHistory.isEmpty() ? 0 : Collections.min(pingHistory);
-    }
-
-    private int getPingAvg() {
-        return pingHistory.isEmpty() ? 0 : (int) pingHistory.stream().mapToInt(Integer::intValue).average().orElse(0);
-    }
-
-    private int getPingMax() {
-        return pingHistory.isEmpty() ? 0 : Collections.max(pingHistory);
-    }
+    // методи для мін/сер/макс статистики - тепер використовують кеш
+    private int getFpsMin() { return cachedFpsMin; }
+    private int getFpsAvg() { return cachedFpsAvg; }
+    private int getFpsMax() { return cachedFpsMax; }
+    private double getMemoryMin() { return cachedMemoryMin; }
+    private double getMemoryAvg() { return cachedMemoryAvg; }
+    private double getMemoryMax() { return cachedMemoryMax; }
+    private int getPingMin() { return cachedPingMin; }
+    private int getPingAvg() { return cachedPingAvg; }
+    private int getPingMax() { return cachedPingMax; }
 
     private void renderHudElements(DrawContext drawContext, MinecraftClient client) {
         hudLines.clear();
@@ -203,11 +216,8 @@ public class TemplateModClient implements ClientModInitializer {
             int fpsColor = config.getFpsColor(fps);
 
             if (config.showAdvancedFps && !fpsHistory.isEmpty()) {
-                int fpsMin = getFpsMin();
-                int fpsAvg = getFpsAvg();
-                int fpsMax = getFpsMax();
                 String fpsText = Text.translatable("text.optimizationmod.hud.fps_stats",
-                        fps, fpsMin, fpsAvg, fpsMax).getString();
+                        fps, getFpsMin(), getFpsAvg(), getFpsMax()).getString();
                 hudLines.add(new ColoredText(fpsText, fpsColor));
             } else {
                 String fpsText = Text.translatable("text.optimizationmod.hud.fps", fps).getString();
@@ -220,21 +230,18 @@ public class TemplateModClient implements ClientModInitializer {
             Runtime runtime = Runtime.getRuntime();
             long usedMemory = runtime.totalMemory() - runtime.freeMemory();
             long maxMemory = runtime.maxMemory();
-            long usedMB = usedMemory / (1024 * 1024);
-            long maxMB = maxMemory / (1024 * 1024);
+            long usedMB = usedMemory >> 20; // швидше ніж ділення на 1024*1024
+            long maxMB = maxMemory >> 20;
             int percentage = (int)((usedMemory * 100) / maxMemory);
             double memoryUsagePercent = (double) usedMemory / maxMemory * 100.0;
             int memoryColor = config.getMemoryColor(memoryUsagePercent);
 
             if (config.showAdvancedMemory && !memoryHistory.isEmpty()) {
-                double memoryMin = getMemoryMin();
-                double memoryAvg = getMemoryAvg();
-                double memoryMax = getMemoryMax();
                 String memoryText = Text.translatable("text.optimizationmod.hud.memory_stats",
                         String.format("%dMB/%dMB (%d%%)", usedMB, maxMB, percentage),
-                        String.format("%.1f%%", memoryMin),
-                        String.format("%.1f%%", memoryAvg),
-                        String.format("%.1f%%", memoryMax)).getString();
+                        String.format("%.1f%%", getMemoryMin()),
+                        String.format("%.1f%%", getMemoryAvg()),
+                        String.format("%.1f%%", getMemoryMax())).getString();
                 hudLines.add(new ColoredText(memoryText, memoryColor));
             } else {
                 String memoryText = Text.translatable("text.optimizationmod.hud.memory",
@@ -248,11 +255,8 @@ public class TemplateModClient implements ClientModInitializer {
             int pingColor = config.getPingColor(cachedPing);
 
             if (config.showAdvancedPing && !pingHistory.isEmpty()) {
-                int pingMin = getPingMin();
-                int pingAvg = getPingAvg();
-                int pingMax = getPingMax();
                 String pingText = Text.translatable("text.optimizationmod.hud.ping_stats",
-                        cachedPing, pingMin, pingAvg, pingMax).getString();
+                        cachedPing, getPingMin(), getPingAvg(), getPingMax()).getString();
                 hudLines.add(new ColoredText(pingText, pingColor));
             } else {
                 String pingText = Text.translatable("text.optimizationmod.hud.ping", cachedPing).getString();
@@ -262,11 +266,22 @@ public class TemplateModClient implements ClientModInitializer {
 
         // показуємо координати
         if (config.showCoordinates && client.player != null) {
-            double x = Math.round(client.player.getX() * 10.0) / 10.0;
-            double y = Math.round(client.player.getY() * 10.0) / 10.0;
-            double z = Math.round(client.player.getZ() * 10.0) / 10.0;
+            String coordsText;
 
-            String coordsText = Text.translatable("text.optimizationmod.hud.coordinates", x, y, z).getString();
+            if (config.coordinatesShowDecimals) {
+                // з десятковими числами
+                double x = Math.rint(client.player.getX() * 10.0) / 10.0;
+                double y = Math.rint(client.player.getY() * 10.0) / 10.0;
+                double z = Math.rint(client.player.getZ() * 10.0) / 10.0;
+                coordsText = Text.translatable("text.optimizationmod.hud.coordinates", x, y, z).getString();
+            } else {
+                // без десяткових чисел (цілі числа)
+                int x = (int) Math.round(client.player.getX());
+                int y = (int) Math.round(client.player.getY());
+                int z = (int) Math.round(client.player.getZ());
+                coordsText = Text.translatable("text.optimizationmod.hud.coordinates_int", x, y, z).getString();
+            }
+
             hudLines.add(new ColoredText(coordsText, config.coordinatesColor));
         }
 
@@ -380,6 +395,7 @@ public class TemplateModClient implements ClientModInitializer {
             drawContext.drawText(client.textRenderer, mutableText, x, y, finalColor, false);
         }
     }
+
     private int getHudX(MinecraftClient client, int textWidth) {
         int screenWidth = (int)(client.getWindow().getScaledWidth() / config.hudScale);
 

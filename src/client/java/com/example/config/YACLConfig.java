@@ -94,6 +94,7 @@ public class YACLConfig {
 
     // Кольори координат
     public boolean enableCoordinateColors = false;
+    public boolean coordinatesShowDecimals = true; // ЗА ЗАМОВЧУВАННЯМ УВІМКНЕНІ ДЕСЯТКОВІ
     public int coordinatesColor = 0xFFFFFF;
     public int coordinatesXColor = 0xFF5555;
     public int coordinatesYColor = 0x55FF55;
@@ -257,6 +258,7 @@ public class YACLConfig {
         this.pingMediumColor = other.pingMediumColor;
         this.pingBadColor = other.pingBadColor;
         this.enableCoordinateColors = other.enableCoordinateColors;
+        this.coordinatesShowDecimals = other.coordinatesShowDecimals; // ДОДАНО НОВЕ ПОЛЕ
         this.coordinatesColor = other.coordinatesColor;
         this.coordinatesXColor = other.coordinatesXColor;
         this.coordinatesYColor = other.coordinatesYColor;
@@ -280,7 +282,7 @@ public class YACLConfig {
                         // Основні налаштування
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.main_settings"))
-                                .collapsed(false)
+                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
 
                                 // Головний перемикач
                                 .option(createBooleanOption(
@@ -302,7 +304,7 @@ public class YACLConfig {
                         // Елементи HUD
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.hud_elements"))
-                                .collapsed(false)
+                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.show_fps",
@@ -350,7 +352,7 @@ public class YACLConfig {
                         // Розширена статистика
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.advanced_stats"))
-                                .collapsed(false)
+                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.show_advanced_fps",
@@ -377,7 +379,7 @@ public class YACLConfig {
                         // Розмір та позиція
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.size_position"))
-                                .collapsed(false)
+                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
 
                                 .option(Option.<Float>createBuilder()
                                         .name(Text.translatable("text.optimizationmod.option.hud_scale"))
@@ -423,7 +425,7 @@ public class YACLConfig {
                         // Зовнішній вигляд тексту
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.text_appearance"))
-                                .collapsed(false)
+                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.hud_shadow",
@@ -450,7 +452,7 @@ public class YACLConfig {
                         // Основні кольори
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.colors"))
-                                .collapsed(false)
+                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
 
                                 .option(Option.<Color>createBuilder()
                                         .name(Text.translatable("text.optimizationmod.option.coordinates_color"))
@@ -474,10 +476,10 @@ public class YACLConfig {
                                         val -> config.daysColor = val))
                                 .build())
 
-                        // Кольори координат
+                        // Налаштування координат
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.category.coordinate_colors"))
-                                .collapsed(true)
+                                .name(Text.translatable("text.optimizationmod.category.coordinate_settings"))
+                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.enable_coordinate_colors",
@@ -485,6 +487,14 @@ public class YACLConfig {
                                         false,
                                         () -> config.enableCoordinateColors,
                                         val -> config.enableCoordinateColors = val))
+
+                                // НОВА ОПЦІЯ ДЛЯ ДЕСЯТКОВИХ ЧИСЕЛ
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.coordinates_show_decimals",
+                                        "text.optimizationmod.option.coordinates_show_decimals.tooltip",
+                                        true, // ЗА ЗАМОВЧУВАННЯМ УВІМКНЕНІ
+                                        () -> config.coordinatesShowDecimals,
+                                        val -> config.coordinatesShowDecimals = val))
 
                                 .option(createColorOption(
                                         "text.optimizationmod.option.coordinates_x_color",
@@ -508,7 +518,7 @@ public class YACLConfig {
                                         val -> config.coordinatesZColor = val))
                                 .build())
 
-                        // Кольорові групи
+                        // Кольорові групи - ТЕПЕР ВСІ РОЗГОРНУТІ
                         .group(createFpsColorGroup(config))
                         .group(createMemoryColorGroup(config))
                         .group(createPingColorGroup(config))
@@ -600,7 +610,7 @@ public class YACLConfig {
     private static OptionGroup createFpsColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("text.optimizationmod.category.fps_colors"))
-                .collapsed(true)
+                .collapsed(false) // РОЗГОРНУТО ЗА ЗАМОВЧУВАННЯМ
                 .option(createColorOption(
                         "text.optimizationmod.option.fps_good_color",
                         "text.optimizationmod.option.fps_good_color.tooltip",
@@ -625,7 +635,7 @@ public class YACLConfig {
     private static OptionGroup createMemoryColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("text.optimizationmod.category.memory_colors"))
-                .collapsed(true)
+                .collapsed(false) // РОЗГОРНУТО ЗА ЗАМОВЧУВАННЯМ
                 .option(createColorOption(
                         "text.optimizationmod.option.memory_good_color",
                         "text.optimizationmod.option.memory_good_color.tooltip",
@@ -650,7 +660,7 @@ public class YACLConfig {
     private static OptionGroup createPingColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("text.optimizationmod.category.ping_colors"))
-                .collapsed(true)
+                .collapsed(false) // РОЗГОРНУТО ЗА ЗАМОВЧУВАННЯМ
                 .option(createColorOption(
                         "text.optimizationmod.option.ping_good_color",
                         "text.optimizationmod.option.ping_good_color.tooltip",

@@ -173,5 +173,10 @@
   "text.optimizationmod.option.show_days": "Показувати дні",
   "text.optimizationmod.option.show_days.tooltip": "Показувати лічильник днів",
   "text.optimizationmod.option.days_color": "Колір лічильника днів",
-  "text.optimizationmod.option.days_color.tooltip": "Колір для лічильника днів"
+  "text.optimizationmod.option.days_color.tooltip": "Колір для лічильника днів",
+
+  "text.optimizationmod.option.coordinates_show_decimals": "Показувати десяткові",
+  "text.optimizationmod.option.coordinates_show_decimals.tooltip": "Показувати десяткові у координатах",
+  "text.optimizationmod.category.coordinate_settings": "Налаштування координат",
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
 }

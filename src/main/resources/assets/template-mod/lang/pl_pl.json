@@ -173,5 +173,10 @@
   "text.optimizationmod.option.show_days": "Pokaż dni",
   "text.optimizationmod.option.show_days.tooltip": "Wyświetl licznik dni świata",
   "text.optimizationmod.option.days_color": "Kolor dni",
-  "text.optimizationmod.option.days_color.tooltip": "Kolor licznika dni"
+  "text.optimizationmod.option.days_color.tooltip": "Kolor licznika dni",
+
+  "text.optimizationmod.option.coordinates_show_decimals": "Pokaż miejsca dziesiętne",
+  "text.optimizationmod.option.coordinates_show_decimals.tooltip": "Pokaż miejsca dziesiętne w współrzędnych",
+  "text.optimizationmod.category.coordinate_settings": "Ustawienia współrzędnych",
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
 }

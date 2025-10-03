@@ -173,5 +173,10 @@
   "text.optimizationmod.option.show_days": "Tage anzeigen",
   "text.optimizationmod.option.show_days.tooltip": "Weltentage-Zähler anzeigen",
   "text.optimizationmod.option.days_color": "Tagefarbe",
-  "text.optimizationmod.option.days_color.tooltip": "Farbe für Tage-Zähler"
+  "text.optimizationmod.option.days_color.tooltip": "Farbe für Tage-Zähler",
+
+  "text.optimizationmod.option.coordinates_show_decimals": "Dezimalstellen anzeigen",
+  "text.optimizationmod.option.coordinates_show_decimals.tooltip": "Dezimalstellen in den Koordinaten anzeigen",
+  "text.optimizationmod.category.coordinate_settings": "Koordinateneinstellungen",
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
 }

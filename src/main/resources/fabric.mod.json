@@ -43,6 +43,6 @@
 
 	},
 	"suggests": {
-
+		"modmenu": "*"
 	}
 }

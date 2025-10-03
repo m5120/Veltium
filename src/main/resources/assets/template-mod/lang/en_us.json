@@ -173,5 +173,10 @@
   "text.optimizationmod.option.show_days": "Show Days",
   "text.optimizationmod.option.show_days.tooltip": "Display world days counter",
   "text.optimizationmod.option.days_color": "Days Counter Color",
-  "text.optimizationmod.option.days_color.tooltip": "Color for days counter"
+  "text.optimizationmod.option.days_color.tooltip": "Color for days counter",
+
+  "text.optimizationmod.option.coordinates_show_decimals": "Show Decimals",
+  "text.optimizationmod.option.coordinates_show_decimals.tooltip": "Show decimal places in coordinates",
+  "text.optimizationmod.category.coordinate_settings": "Coordinate Settings",
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
 }

@@ -173,5 +173,10 @@
   "text.optimizationmod.option.show_days": "显示天数",
   "text.optimizationmod.option.show_days.tooltip": "显示世界天数计数器",
   "text.optimizationmod.option.days_color": "天数颜色",
-  "text.optimizationmod.option.days_color.tooltip": "天数计数器的颜色"
+  "text.optimizationmod.option.days_color.tooltip": "天数计数器的颜色",
+
+  "text.optimizationmod.option.coordinates_show_decimals": "显示小数",
+  "text.optimizationmod.option.coordinates_show_decimals.tooltip": "在坐标中显示小数位",
+  "text.optimizationmod.category.coordinate_settings": "坐标设置",
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
 }
