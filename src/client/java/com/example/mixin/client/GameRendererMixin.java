@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.TemplateModClient;
+import com.example.Veltium;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.particle.ParticlesMode;
@@ -47,11 +47,11 @@ public class GameRendererMixin {
 
     @ModifyVariable(method = "getFov", at = @At("HEAD"), argsOnly = true)
     private double modifyFov(double fov){
-        if(!TemplateModClient.config.optimizeRendering||!adaptiveMode) {
+        if(!Veltium.config.optimizeRendering||!adaptiveMode) {
             return fov;
         }
 
-        if(averageFps<30&&TemplateModClient.config.shouldReduceLag()) {
+        if(averageFps<30&& Veltium.config.shouldReduceLag()) {
             return Math.max(fov*0.95,70.0);
         }
 
@@ -82,11 +82,11 @@ public class GameRendererMixin {
         long usedMemory=totalMemory-freeMemory;
         double memoryUsagePercent=(double)usedMemory/runtime.maxMemory();
 
-        adaptiveMode=(averageFps<50||memoryUsagePercent>0.8)&&TemplateModClient.config.shouldReduceLag();
+        adaptiveMode=(averageFps<50||memoryUsagePercent>0.8)&& Veltium.config.shouldReduceLag();
     }
 
     private void checkAndApplyAdaptiveOptimizations( ){
-        if(!TemplateModClient.config.optimizeRendering){
+        if(!Veltium.config.optimizeRendering){
             restoreOriginalSettings( );
             return;
         }

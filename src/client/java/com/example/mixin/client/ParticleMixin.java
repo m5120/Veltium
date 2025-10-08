@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.TemplateModClient;
+import com.example.Veltium;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleManager;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class ParticleMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     private void veltiumOptimizeParticles(CallbackInfo ci) {
         // якщо вимкнено то нафіг
-        if (!TemplateModClient.config.cullParticles || TemplateModClient.config.optimizationLevel < 1) return;
+        if (!Veltium.config.cullParticles || Veltium.config.optimizationLevel < 1) return;
 
         long currentTime = System.currentTimeMillis();
 
@@ -44,7 +44,7 @@ public class ParticleMixin {
 
     @Inject(method = "addParticle", at = @At("HEAD"), cancellable = true)
     private void veltiumCullDistantParticles(CallbackInfo ci) {
-        if (!TemplateModClient.config.cullParticles) return;
+        if (!Veltium.config.cullParticles) return;
 
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null) return; // на всякий

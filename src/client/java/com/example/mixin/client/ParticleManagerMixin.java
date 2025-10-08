@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.TemplateModClient;
+import com.example.Veltium;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.particle.ParticleEffect;
@@ -26,14 +26,14 @@ public class ParticleManagerMixin {
                                                  CallbackInfoReturnable<Particle> cir) {
 
         int currentParticleCount = veltiumGetCurrentParticleCount();
-        int maxParticles = TemplateModClient.config.getEffectiveParticleLimit();
+        int maxParticles = Veltium.config.getEffectiveParticleLimit();
 
         if (currentParticleCount >= maxParticles) {
             cir.setReturnValue(null);
             return;
         }
 
-        if (TemplateModClient.config.optimizeRendering) {
+        if (Veltium.config.optimizeRendering) {
             if (currentParticleCount > maxParticles * 0.8 && Math.random() < 0.3) {
                 cir.setReturnValue(null);
             }
@@ -42,9 +42,9 @@ public class ParticleManagerMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void veltiumOptimizeParticleTick(CallbackInfo ci) {
-        if (TemplateModClient.config.reduceLag) {
+        if (Veltium.config.reduceLag) {
             int currentParticleCount = veltiumGetCurrentParticleCount();
-            int maxParticles = TemplateModClient.config.getEffectiveParticleLimit();
+            int maxParticles = Veltium.config.getEffectiveParticleLimit();
 
             if (currentParticleCount > maxParticles * 0.9) {
 

@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.TemplateModClient;
+import com.example.Veltium;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.chunk.ChunkBuilder;
@@ -57,7 +57,7 @@ public class WorldRenderMixin {
 
     @Inject(method = "render", at = @At("HEAD"))
     private void optimizeWorldRender(CallbackInfo ci) {
-        if (TemplateModClient.config.optimizationLevel >= 1 || isPojavLauncher) {
+        if (Veltium.config.optimizationLevel >= 1 || isPojavLauncher) {
             long currentTime = System.currentTimeMillis();
             frameCounter++;
 
@@ -88,7 +88,7 @@ public class WorldRenderMixin {
     @Inject(method = "setupTerrain", at = @At("HEAD"), cancellable = true)
     private void optimizeTerrainSetup(Camera camera, CallbackInfo ci) {
         // якщо дуже лагає то скіпаємо деякі кадри terrain
-        if (TemplateModClient.config.optimizationLevel >= 2 && lowPerfMode) {
+        if (Veltium.config.optimizationLevel >= 2 && lowPerfMode) {
             int forcedDistance = Math.max(4, dynamicRenderDist / 2);
             Vec3d camPos = camera.getPos();
             // тут можна було б зробити більше але поки так норм
@@ -98,7 +98,7 @@ public class WorldRenderMixin {
     @Inject(method = "drawBlockOutline", at = @At("HEAD"), cancellable = true)
     private void optimizeBlockOutline(CallbackInfo ci) {
         // оптимізуємо контури блоків бо вони жрут фпс
-        if (TemplateModClient.config.optimizationLevel >= 1 || isPojavLauncher) {
+        if (Veltium.config.optimizationLevel >= 1 || isPojavLauncher) {
             if (isPojavLauncher && (lowPerfMode || lowMemoryMode)) {
                 // для pojav скіпаємо кожен другий кадр
                 if (frameCounter % 2 != 0) {
@@ -134,7 +134,7 @@ public class WorldRenderMixin {
             if (frameCounter % particleReduction == 0) {
                 ci.cancel();
             }
-        } else if (TemplateModClient.config.optimizationLevel >= 3 && lowPerfMode) {
+        } else if (Veltium.config.optimizationLevel >= 3 && lowPerfMode) {
             if (frameCounter % 3 == 0) {
                 ci.cancel();
             }
@@ -148,7 +148,7 @@ public class WorldRenderMixin {
             if (frameCounter % skyRenderSkip != 0) {
                 ci.cancel();
             }
-        } else if (TemplateModClient.config.optimizationLevel >= 3 && lowPerfMode) {
+        } else if (Veltium.config.optimizationLevel >= 3 && lowPerfMode) {
             if (frameCounter % 2 == 0) {
                 ci.cancel();
             }
@@ -164,7 +164,7 @@ public class WorldRenderMixin {
             } else if (frameCounter % 6 != 0) {
                 ci.cancel();
             }
-        } else if (TemplateModClient.config.optimizationLevel >= 2 && lowPerfMode) {
+        } else if (Veltium.config.optimizationLevel >= 2 && lowPerfMode) {
             if (frameCounter % 4 != 0) {
                 ci.cancel();
             }
@@ -193,7 +193,7 @@ public class WorldRenderMixin {
             if (lowMemoryMode) return Math.min(distance, 16.0);
             if (lowPerfMode) return Math.min(distance, 24.0);
             return Math.min(distance, 32.0);
-        } else if (TemplateModClient.config.optimizationLevel >= 2 && lowPerfMode) {
+        } else if (Veltium.config.optimizationLevel >= 2 && lowPerfMode) {
             return Math.min(distance, 32.0);
         }
         return distance;

@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.TemplateModClient;
+import com.example.Veltium;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.sound.SoundManager;
@@ -22,7 +22,7 @@ public class SoundMixin {
     private void OptimizeAudio(CallbackInfo ci) {
         audioTickCounter++;
         
-        if (TemplateModClient.config.optimizationLevel >= 2) {
+        if (Veltium.config.optimizationLevel >= 2) {
             MinecraftClient client = MinecraftClient.getInstance();
             GameOptions options = client.options;
 

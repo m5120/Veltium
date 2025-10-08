@@ -20,7 +20,7 @@
 			"com.example.TemplateMod"
 		],
 		"client": [
-			"com.example.TemplateModClient"
+			"com.example.Veltium"
 		],
 		"modmenu": [
 			"com.example.OptimizationModMenuIntegration"

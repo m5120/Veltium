@@ -1,6 +1,6 @@
 package com.example.mixin.client;
 
-import com.example.TemplateModClient;
+import com.example.Veltium;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ public class MinecraftClientMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onMinecraftClientInit(RunArgs args, CallbackInfo ci) {
-        if (TemplateModClient.config.fastMath) {
+        if (Veltium.config.fastMath) {
             System.setProperty("java.awt.headless", "true");
         }
     }
@@ -30,7 +30,7 @@ public class MinecraftClientMixin {
     }
 
     private void performMemoryOptimization() {
-        if (!TemplateModClient.config.smartMemoryManagement) return;
+        if (!Veltium.config.smartMemoryManagement) return;
 
         Runtime runtime = Runtime.getRuntime();
         long freeMemory = runtime.freeMemory();
