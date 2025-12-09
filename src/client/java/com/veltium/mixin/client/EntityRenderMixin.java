@@ -1,6 +1,6 @@
-package com.example.mixin.client;
+package com.veltium.mixin.client;
 
-import com.example.Veltium;
+import com.veltium.Veltium;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
@@ -8,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

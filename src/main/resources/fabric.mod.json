@@ -17,20 +17,20 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.TemplateMod"
+			"com.veltium.TemplateMod"
 		],
 		"client": [
-			"com.example.Veltium"
+			"com.veltium.Veltium"
 		],
 		"modmenu": [
-			"com.example.OptimizationModMenuIntegration"
+			"com.veltium.OptimizationModMenuIntegration"
 		]
 	},
 
 	"mixins": [
-		"template-mod.mixins.json",
+		"veltium.mixins.json",
 		{
-			"config": "template-mod.client.mixins.json",
+			"config": "veltium.client.mixins.json",
 			"environment": "client"
 		}
 	],

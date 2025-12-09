@@ -1,6 +1,6 @@
-package com.example;
+ package com.veltium;
 
-import com.example.config.YACLConfig;
+import com.veltium.config.YACLConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;

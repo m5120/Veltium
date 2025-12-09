@@ -1,6 +1,6 @@
-package com.example.mixin.client;
+package com.veltium.mixin.client;
 
-import com.example.Veltium;
+import com.veltium.Veltium;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.sound.SoundManager;

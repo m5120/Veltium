@@ -1,4 +1,4 @@
-package com.example;
+package com.veltium;
 
 import net.fabricmc.api.ModInitializer;
 

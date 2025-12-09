@@ -1,9 +1,9 @@
 {
 	"required": true,
-	"package": "com.example.mixin.client",
+	"package": "com.veltium.mixin",
 	"compatibilityLevel": "JAVA_21",
-	"client": [
-		"ExampleClientMixin"
+	"mixins": [
+		"ExampleMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

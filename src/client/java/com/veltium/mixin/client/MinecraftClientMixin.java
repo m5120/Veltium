@@ -1,6 +1,6 @@
-package com.example.mixin.client;
+package com.veltium.mixin.client;
 
-import com.example.Veltium;
+import com.veltium.Veltium;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import org.spongepowered.asm.mixin.Mixin;

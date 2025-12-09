@@ -1,6 +1,6 @@
-package com.example;
+package com.veltium;
 
-import com.example.config.YACLConfig;
+import com.veltium.config.YACLConfig;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 

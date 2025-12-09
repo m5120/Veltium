@@ -1,6 +1,6 @@
-package com.example.mixin.client;
+package com.veltium.mixin.client;
 
-import com.example.Veltium;
+import com.veltium.Veltium;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.particle.ParticleEffect;

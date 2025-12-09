@@ -1,4 +1,4 @@
-package com.example.config;
+package com.veltium.config;
 
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;

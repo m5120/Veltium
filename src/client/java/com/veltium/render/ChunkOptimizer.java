@@ -1,4 +1,4 @@
-package com.example.render;
+package com.veltium.render;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
@@ -11,7 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Box;
 import net.minecraft.entity.Entity;
-import com.example.config.YACLConfig;
+import com.veltium.config.YACLConfig;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
