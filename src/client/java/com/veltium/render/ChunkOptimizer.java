@@ -93,7 +93,14 @@ public class ChunkOptimizer {
         Camera camera = client.gameRenderer.getCamera();
         if (camera != lastCamera) {
             lastCamera = camera;
-            cameraPos = camera.getPos();
+
+            // МІНІМАЛЬНА ЗАМІНА: замість camera.getPos()
+            BlockPos bp = camera.getBlockPos();
+            cameraPos = new Vec3d(
+                    bp.getX() + 0.5,
+                    bp.getY() + 0.5,
+                    bp.getZ() + 0.5
+            );
 
             // рахуємо куди дивится камера
             float yaw = camera.getYaw();

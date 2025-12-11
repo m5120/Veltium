@@ -1,4 +1,4 @@
- package com.veltium;
+package com.veltium;
 
 import com.veltium.config.YACLConfig;
 import net.fabricmc.api.ClientModInitializer;
@@ -34,18 +34,22 @@ public class Veltium implements ClientModInitializer {
     private boolean messageSent = false;
     private final List<ColoredText> hudLines = new ArrayList<>();
 
-    // статистики для мін/сер/макс - використовуємо ArrayDeque для кращої продуктивності
+    // кеш для світу
+    private String cachedWorldTime = "";   // "HH:MM"
+    private boolean cachedIsDay = true;    // день чи ніч
+
+    // статистики для мін/сер/макс
     private final ArrayDeque<Integer> fpsHistory = new ArrayDeque<>(MAX_HISTORY);
     private final ArrayDeque<Double> memoryHistory = new ArrayDeque<>(MAX_HISTORY);
     private final ArrayDeque<Integer> pingHistory = new ArrayDeque<>(MAX_HISTORY);
     private static final int MAX_HISTORY = 100;
 
-    // кешовані статистики для зменшення обчислень
+    // кешовані статистики
     private int cachedFpsMin, cachedFpsAvg, cachedFpsMax;
     private double cachedMemoryMin, cachedMemoryAvg, cachedMemoryMax;
     private int cachedPingMin, cachedPingAvg, cachedPingMax;
     private long lastStatsUpdate = 0;
-    private static final long STATS_UPDATE_INTERVAL = 1000; // оновлюємо статистики раз на секунду
+    private static final long STATS_UPDATE_INTERVAL = 1000;
 
     // клас для збереження тексту з кольором
     private static class ColoredText {
@@ -62,7 +66,6 @@ public class Veltium implements ClientModInitializer {
     public void onInitializeClient() {
         config = YACLConfig.getInstance();
 
-        // початкова клавіша для конфігу (по замовчуванню O)
         configKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.optimizationmod.config",
                 GLFW.GLFW_KEY_O,
@@ -70,18 +73,15 @@ public class Veltium implements ClientModInitializer {
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            // показуємо повідомлення про завантаження
             if (!messageSent && client.player != null && config.modEnabled && config.showNotifications) {
                 client.inGameHud.getChatHud().addMessage(Text.translatable("text.optimizationmod.message.loaded"));
                 messageSent = true;
             }
 
-            // перевіряємо натискання клавіші конфігу
             while (configKeyBinding.wasPressed()) {
                 client.setScreen(YACLConfig.createConfigScreen(client.currentScreen));
             }
 
-            // застосовуємо оптимізації
             applyOptimizations(client);
         });
 
@@ -94,20 +94,16 @@ public class Veltium implements ClientModInitializer {
 
         long currentTime = System.currentTimeMillis();
 
-        // середній рівень оптимізації
         if (config.optimizationLevel >= 2) {
             client.options.getBobView().setValue(false);
             client.options.getEntityShadows().setValue(false);
         }
 
-        // високий рівень оптимізації
         if (config.optimizationLevel >= 3) {
             client.options.getCloudRenderMode().setValue(net.minecraft.client.option.CloudRenderMode.OFF);
-            client.options.getGraphicsMode().setValue(net.minecraft.client.option.GraphicsMode.FAST);
             client.options.getParticles().setValue(net.minecraft.particle.ParticlesMode.DECREASED);
         }
 
-        // автоматичне очищення памяті
         if (config.reduceLag && currentTime - lastGC > 30000) {
             Runtime runtime = Runtime.getRuntime();
             long usedMemory = runtime.totalMemory() - runtime.freeMemory();
@@ -125,14 +121,12 @@ public class Veltium implements ClientModInitializer {
 
         long currentTime = System.currentTimeMillis();
 
-        // оновлюємо кеш тільки коли потрібно
         if (currentTime - lastHudUpdate > config.hudUpdateInterval) {
             updateCache(client);
             updateStatistics(client);
             lastHudUpdate = currentTime;
         }
 
-        // застосовуємо масштаб
         drawContext.getMatrices().pushMatrix();
         drawContext.getMatrices().scale(config.hudScale, config.hudScale);
         renderHudElements(drawContext, client);
@@ -142,30 +136,20 @@ public class Veltium implements ClientModInitializer {
     private void updateStatistics(MinecraftClient client) {
         long currentTime = System.currentTimeMillis();
 
-        // збираємо статистику FPS
         int currentFps = client.getCurrentFps();
-        if (fpsHistory.size() >= MAX_HISTORY) {
-            fpsHistory.removeFirst();
-        }
+        if (fpsHistory.size() >= MAX_HISTORY) fpsHistory.removeFirst();
         fpsHistory.addLast(currentFps);
 
-        // збираємо статистику памяті
         Runtime runtime = Runtime.getRuntime();
         long usedMemory = runtime.totalMemory() - runtime.freeMemory();
         long maxMemory = runtime.maxMemory();
         double memoryUsagePercent = (double) usedMemory / maxMemory * 100.0;
-        if (memoryHistory.size() >= MAX_HISTORY) {
-            memoryHistory.removeFirst();
-        }
+        if (memoryHistory.size() >= MAX_HISTORY) memoryHistory.removeFirst();
         memoryHistory.addLast(memoryUsagePercent);
 
-        // збираємо статистику пінгу
-        if (pingHistory.size() >= MAX_HISTORY) {
-            pingHistory.removeFirst();
-        }
+        if (pingHistory.size() >= MAX_HISTORY) pingHistory.removeFirst();
         pingHistory.addLast(cachedPing);
 
-        // оновлюємо кешовані статистики тільки раз на секунду
         if (currentTime - lastStatsUpdate > STATS_UPDATE_INTERVAL) {
             updateCachedStats();
             lastStatsUpdate = currentTime;
@@ -173,21 +157,18 @@ public class Veltium implements ClientModInitializer {
     }
 
     private void updateCachedStats() {
-        // кешуємо FPS статистики
         if (!fpsHistory.isEmpty()) {
             cachedFpsMin = Collections.min(fpsHistory);
             cachedFpsMax = Collections.max(fpsHistory);
             cachedFpsAvg = (int) fpsHistory.stream().mapToInt(Integer::intValue).average().orElse(0);
         }
 
-        // кешуємо Memory статистики
         if (!memoryHistory.isEmpty()) {
             cachedMemoryMin = Collections.min(memoryHistory);
             cachedMemoryMax = Collections.max(memoryHistory);
             cachedMemoryAvg = memoryHistory.stream().mapToDouble(Double::doubleValue).average().orElse(0);
         }
 
-        // кешуємо Ping статистики
         if (!pingHistory.isEmpty()) {
             cachedPingMin = Collections.min(pingHistory);
             cachedPingMax = Collections.max(pingHistory);
@@ -195,7 +176,6 @@ public class Veltium implements ClientModInitializer {
         }
     }
 
-    // методи для мін/сер/макс статистики - тепер використовують кеш
     private int getFpsMin() { return cachedFpsMin; }
     private int getFpsAvg() { return cachedFpsAvg; }
     private int getFpsMax() { return cachedFpsMax; }
@@ -209,7 +189,6 @@ public class Veltium implements ClientModInitializer {
     private void renderHudElements(DrawContext drawContext, MinecraftClient client) {
         hudLines.clear();
 
-        // показуємо FPS
         if (config.showFpsCounter) {
             int fps = client.getCurrentFps();
             int fpsColor = config.getFpsColor(fps);
@@ -224,12 +203,11 @@ public class Veltium implements ClientModInitializer {
             }
         }
 
-        // показуємо використання памяті
         if (config.showMemoryUsage) {
             Runtime runtime = Runtime.getRuntime();
             long usedMemory = runtime.totalMemory() - runtime.freeMemory();
             long maxMemory = runtime.maxMemory();
-            long usedMB = usedMemory >> 20; // швидше ніж ділення на 1024*1024
+            long usedMB = usedMemory >> 20;
             long maxMB = maxMemory >> 20;
             int percentage = (int)((usedMemory * 100) / maxMemory);
             double memoryUsagePercent = (double) usedMemory / maxMemory * 100.0;
@@ -249,7 +227,6 @@ public class Veltium implements ClientModInitializer {
             }
         }
 
-        // показуємо пінг
         if (config.showPing && client.getNetworkHandler() != null) {
             int pingColor = config.getPingColor(cachedPing);
 
@@ -263,18 +240,15 @@ public class Veltium implements ClientModInitializer {
             }
         }
 
-        // показуємо координати
         if (config.showCoordinates && client.player != null) {
             String coordsText;
 
             if (config.coordinatesShowDecimals) {
-                // з десятковими числами
                 double x = Math.rint(client.player.getX() * 10.0) / 10.0;
                 double y = Math.rint(client.player.getY() * 10.0) / 10.0;
                 double z = Math.rint(client.player.getZ() * 10.0) / 10.0;
                 coordsText = Text.translatable("text.optimizationmod.hud.coordinates", x, y, z).getString();
             } else {
-                // без десяткових чисел (цілі числа)
                 int x = (int) Math.round(client.player.getX());
                 int y = (int) Math.round(client.player.getY());
                 int z = (int) Math.round(client.player.getZ());
@@ -284,7 +258,6 @@ public class Veltium implements ClientModInitializer {
             hudLines.add(new ColoredText(coordsText, config.coordinatesColor));
         }
 
-        // показуємо час
         if (config.showTime) {
             String timeText = Text.translatable("text.optimizationmod.hud.time", cachedTime).getString();
             hudLines.add(new ColoredText(timeText, config.timeColor));
@@ -297,9 +270,25 @@ public class Veltium implements ClientModInitializer {
             hudLines.add(new ColoredText(daysText, config.daysColor));
         }
 
+        // НОВЕ: один красивий рядок "Час світу: 12:34 (День/Ніч)"
+        if (config.showWorldTime && client.world != null && !cachedWorldTime.isEmpty()) {
+            String phaseKey = cachedIsDay
+                    ? "text.optimizationmod.hud.day"
+                    : "text.optimizationmod.hud.night";
+            String phaseLocalized = Text.translatable(phaseKey).getString();
+
+            String worldTimeText = Text.translatable(
+                    "text.optimizationmod.hud.world_time",
+                    cachedWorldTime,
+                    phaseLocalized
+            ).getString();
+
+            int color = cachedIsDay ? config.dayColor : config.nightColor;
+            hudLines.add(new ColoredText(worldTimeText, color));
+        }
+
         if (hudLines.isEmpty()) return;
 
-        // то не я рахую розміри HUD
         int totalHeight = hudLines.size() * 12 + 8;
         int padding = 4;
 
@@ -326,7 +315,6 @@ public class Veltium implements ClientModInitializer {
 
     }
 
-    // рендеринг координат з кольоровими частинами
     private void renderColoredCoordinates(DrawContext drawContext, MinecraftClient client, String text, int x, int y) {
         int colonIndex = text.indexOf(':');
         if (colonIndex == -1) {
@@ -364,7 +352,6 @@ public class Veltium implements ClientModInitializer {
     }
 
     private void updateCache(MinecraftClient client) {
-        // оновлюємо кеш пінгу
         if (client.getNetworkHandler() != null && client.player != null) {
             try {
                 var playerEntry = client.getNetworkHandler().getPlayerListEntry(client.player.getUuid());
@@ -374,9 +361,24 @@ public class Veltium implements ClientModInitializer {
             }
         }
 
-        // оновлюємо кеш часу
         LocalDateTime now = LocalDateTime.now();
         cachedTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+        if (client.world != null) {
+            long worldTime = client. world.getTimeOfDay() % 24000L;
+            cachedIsDay = worldTime < 12000L;
+
+            long timeOfDay =client.world.getTimeOfDay();
+            long currentDayTime = timeOfDay % 24000L;
+            long totalSeconds = (currentDayTime * 1200L) / 24000L;
+            long minutes = totalSeconds / 60L;
+            long seconds = totalSeconds % 60L;
+
+            cachedWorldTime = String.format("%02d:%02d", minutes, seconds);
+
+            long days = client.world.getTimeOfDay() / 24000L;
+            cachedDays = days;
+        }
     }
 
     private void renderTextLine(DrawContext drawContext, MinecraftClient client, String text, int x, int y, int color) {
@@ -430,3 +432,4 @@ public class Veltium implements ClientModInitializer {
         }
     }
 }
+

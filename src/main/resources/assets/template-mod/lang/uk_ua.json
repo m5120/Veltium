@@ -178,5 +178,15 @@
   "text.optimizationmod.option.coordinates_show_decimals": "Показувати десяткові",
   "text.optimizationmod.option.coordinates_show_decimals.tooltip": "Показувати десяткові у координатах",
   "text.optimizationmod.category.coordinate_settings": "Налаштування координат",
-  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d",
+
+  "text.optimizationmod.option.show_world_time": "Показувати час ігрового світу",
+  "text.optimizationmod.option.show_world_time.tooltip": "Відображати ігровий час світу та фазу доби (день/ніч).",
+  "text.optimizationmod.option.day_color": "Колір дня",
+  "text.optimizationmod.option.day_color.tooltip": "Колір тексту часу світу вдень.",
+  "text.optimizationmod.option.night_color": "Колір ночі",
+  "text.optimizationmod.option.night_color.tooltip": "Колір тексту часу світу вночі.",
+  "text.optimizationmod.hud.world_time": "Час світу: %s %s",
+  "text.optimizationmod.hud.day": "☀ День",
+  "text.optimizationmod.hud.night": "✦ Ніч"
 }

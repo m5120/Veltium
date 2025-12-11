@@ -178,5 +178,15 @@
   "text.optimizationmod.option.coordinates_show_decimals": "Dezimalstellen anzeigen",
   "text.optimizationmod.option.coordinates_show_decimals.tooltip": "Dezimalstellen in den Koordinaten anzeigen",
   "text.optimizationmod.category.coordinate_settings": "Koordinateneinstellungen",
-  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d",
+
+  "text.optimizationmod.option.show_world_time": "Spielweltzeit anzeigen",
+  "text.optimizationmod.option.show_world_time.tooltip": "Zeigt die Zeit der Spielwelt und die aktuelle Phase (Tag/Nacht) an.",
+  "text.optimizationmod.option.day_color": "Tagesfarbe",
+  "text.optimizationmod.option.day_color.tooltip": "Textfarbe für die Weltzeit am Tag.",
+  "text.optimizationmod.option.night_color": "Nachtfarbe",
+  "text.optimizationmod.option.night_color.tooltip": "Textfarbe für die Weltzeit in der Nacht.",
+  "text.optimizationmod.hud.world_time": "Weltzeit: %s %s",
+  "text.optimizationmod.hud.day": "☀ Tag",
+  "text.optimizationmod.hud.night": "✦ Nacht"
 }

@@ -178,5 +178,15 @@
   "text.optimizationmod.option.coordinates_show_decimals": "显示小数",
   "text.optimizationmod.option.coordinates_show_decimals.tooltip": "在坐标中显示小数位",
   "text.optimizationmod.category.coordinate_settings": "坐标设置",
-  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d"
+  "text.optimizationmod.hud.coordinates_int": "XYZ: %d %d %d",
+
+  "text.optimizationmod.option.show_world_time": "显示游戏世界时间",
+  "text.optimizationmod.option.show_world_time.tooltip": "显示游戏世界中的时间以及当前昼夜状态（白天/夜晚）。",
+  "text.optimizationmod.option.day_color": "白天颜色",
+  "text.optimizationmod.option.day_color.tooltip": "世界时间在白天时使用的文字颜色。",
+  "text.optimizationmod.option.night_color": "夜晚颜色",
+  "text.optimizationmod.option.night_color.tooltip": "世界时间在夜晚时使用的文字颜色。",
+  "text.optimizationmod.hud.world_time": "世界时间：%s %s",
+  "text.optimizationmod.hud.day": "☀ 白天",
+  "text.optimizationmod.hud.night": "✦ 夜晚"
 }

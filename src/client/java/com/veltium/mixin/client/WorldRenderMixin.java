@@ -1,17 +1,17 @@
 package com.veltium.mixin.client;
 
 import com.veltium.Veltium;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client. MinecraftClient;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.chunk.ChunkBuilder;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft. client.render.chunk.ChunkBuilder;
+import net.minecraft. util.math.BlockPos;
 import net.minecraft.client.render.Camera;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered. asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm. mixin.injection.Inject;
+import org.spongepowered.asm.mixin. injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
@@ -39,7 +39,7 @@ public class WorldRenderMixin {
 
     static {
         // детектимо pojav launcher якось там
-        String vmName = System.getProperty("java.vm.name", "").toLowerCase();
+        String vmName = System.getProperty("java.vm. name", "").toLowerCase();
         String osName = System.getProperty("os.name", "").toLowerCase();
         isPojavLauncher = vmName.contains("android") || osName.contains("android")
                 || System.getProperty("pojav.launcher") != null;
@@ -58,7 +58,7 @@ public class WorldRenderMixin {
     @Inject(method = "render", at = @At("HEAD"))
     private void optimizeWorldRender(CallbackInfo ci) {
         if (Veltium.config.optimizationLevel >= 1 || isPojavLauncher) {
-            long currentTime = System.currentTimeMillis();
+            long currentTime = System. currentTimeMillis();
             frameCounter++;
 
             // перевіряємо fps кожну секунду щоб не спамити
@@ -67,7 +67,7 @@ public class WorldRenderMixin {
                 lastFpsCheck = currentTime;
 
                 // визначаємо чи низька продуктивність зараз
-                lowPerfMode = isPojavLauncher ? cachedFps < 25 : cachedFps < 30;
+                lowPerfMode = isPojavLauncher ?  cachedFps < 25 : cachedFps < 30;
                 adjustDynamicRenderDistance();
             }
 
@@ -90,7 +90,8 @@ public class WorldRenderMixin {
         // якщо дуже лагає то скіпаємо деякі кадри terrain
         if (Veltium.config.optimizationLevel >= 2 && lowPerfMode) {
             int forcedDistance = Math.max(4, dynamicRenderDist / 2);
-            Vec3d camPos = camera.getPos();
+            // Використовуємо правильний метод для отримання позиції камери
+            BlockPos camPos = camera.getBlockPos();
             // тут можна було б зробити більше але поки так норм
         }
     }
@@ -98,7 +99,7 @@ public class WorldRenderMixin {
     @Inject(method = "drawBlockOutline", at = @At("HEAD"), cancellable = true)
     private void optimizeBlockOutline(CallbackInfo ci) {
         // оптимізуємо контури блоків бо вони жрут фпс
-        if (Veltium.config.optimizationLevel >= 1 || isPojavLauncher) {
+        if (Veltium. config.optimizationLevel >= 1 || isPojavLauncher) {
             if (isPojavLauncher && (lowPerfMode || lowMemoryMode)) {
                 // для pojav скіпаємо кожен другий кадр
                 if (frameCounter % 2 != 0) {
@@ -111,18 +112,25 @@ public class WorldRenderMixin {
             }
 
             MinecraftClient client = MinecraftClient.getInstance();
-            if (client.crosshairTarget != null && client.crosshairTarget.getPos() != null) {
-                BlockPos pos = BlockPos.ofFloored(client.crosshairTarget.getPos());
-                Long lastRender = blockOutlineCache.get(pos);
-                long now = System.currentTimeMillis();
-
-                int timeout = isPojavLauncher ? 100 : 50;
-                if (lastRender != null && now - lastRender < timeout) {
-                    ci.cancel();
-                    return;
+            if (client.crosshairTarget != null) {
+                // Виправлено: використовуємо правильний метод залежно від типу HitResult
+                BlockPos pos = null;
+                if (client.crosshairTarget.getType() == net.minecraft.util.hit.HitResult.Type. BLOCK) {
+                    pos = ((net.minecraft.util.hit. BlockHitResult) client.crosshairTarget).getBlockPos();
                 }
 
-                blockOutlineCache.put(pos, now);
+                if (pos != null) {
+                    Long lastRender = blockOutlineCache.get(pos);
+                    long now = System.currentTimeMillis();
+
+                    int timeout = isPojavLauncher ? 100 : 50;
+                    if (lastRender != null && now - lastRender < timeout) {
+                        ci.cancel();
+                        return;
+                    }
+
+                    blockOutlineCache.put(pos, now);
+                }
             }
         }
     }
@@ -131,12 +139,12 @@ public class WorldRenderMixin {
     private void optimizeParticleRender(CallbackInfo ci) {
         // зменшуємо частички бо їх дуже багато і вони лагають
         if (isPojavLauncher) {
-            if (frameCounter % particleReduction == 0) {
-                ci.cancel();
+            if (frameCounter % particleReduction != 0) {
+                ci. cancel();
             }
-        } else if (Veltium.config.optimizationLevel >= 3 && lowPerfMode) {
-            if (frameCounter % 3 == 0) {
-                ci.cancel();
+        } else if (Veltium. config.optimizationLevel >= 3 && lowPerfMode) {
+            if (frameCounter % 3 != 0) {
+                ci. cancel();
             }
         }
     }
@@ -148,9 +156,9 @@ public class WorldRenderMixin {
             if (frameCounter % skyRenderSkip != 0) {
                 ci.cancel();
             }
-        } else if (Veltium.config.optimizationLevel >= 3 && lowPerfMode) {
-            if (frameCounter % 2 == 0) {
-                ci.cancel();
+        } else if (Veltium.config. optimizationLevel >= 3 && lowPerfMode) {
+            if (frameCounter % 2 != 0) {
+                ci. cancel();
             }
         }
     }
@@ -192,7 +200,7 @@ public class WorldRenderMixin {
         if (isPojavLauncher) {
             if (lowMemoryMode) return Math.min(distance, 16.0);
             if (lowPerfMode) return Math.min(distance, 24.0);
-            return Math.min(distance, 32.0);
+            return Math. min(distance, 32.0);
         } else if (Veltium.config.optimizationLevel >= 2 && lowPerfMode) {
             return Math.min(distance, 32.0);
         }
@@ -217,9 +225,9 @@ public class WorldRenderMixin {
             }
         } else {
             if (cachedFps > 60) {
-                dynamicRenderDist = Math.min(32, dynamicRenderDist + 1);
+                dynamicRenderDist = Math. min(32, dynamicRenderDist + 1);
             } else if (cachedFps < 30) {
-                dynamicRenderDist = Math.max(4, dynamicRenderDist - 2);
+                dynamicRenderDist = Math. max(4, dynamicRenderDist - 2);
             }
         }
     }

@@ -53,8 +53,11 @@ public class YACLConfig {
     public boolean showMemoryUsage = false;
     public boolean showPing = false;
     public boolean showCoordinates = true;
-    public boolean showTime = false;
+    public boolean showTime = false; // реальний час
     public boolean showDays = false;
+
+    // НОВЕ: один параметр для часу світу (час + день/ніч)
+    public boolean showWorldTime = false;
 
     // === РОЗШИРЕНА СТАТИСТИКА ===
     public boolean showAdvancedFps = false;
@@ -100,12 +103,14 @@ public class YACLConfig {
     public int coordinatesYColor = 0x55FF55;
     public int coordinatesZColor = 0x5555FF;
 
-    // Колір часу
+    // Колір часу (реального)
     public int timeColor = 0xFFFFFF;
     // Колір днів
     public int daysColor = 0xFFFF55;
 
-
+    // НОВЕ: окремі кольори для дня/ночі (час світу)
+    public int dayColor = 0x55FF55;   // зелений для дня
+    public int nightColor = 0x5555FF; // синій/фіолетовий для ночі
 
     // === ENUM ДЛЯ ПОЗИЦІЙ HUD ===
     public enum HudPosition implements NameableEnum {
@@ -235,6 +240,10 @@ public class YACLConfig {
         this.showCoordinates = other.showCoordinates;
         this.showTime = other.showTime;
         this.showDays = other.showDays;
+
+        // нове
+        this.showWorldTime = other.showWorldTime;
+
         this.showAdvancedFps = other.showAdvancedFps;
         this.showAdvancedMemory = other.showAdvancedMemory;
         this.showAdvancedPing = other.showAdvancedPing;
@@ -258,13 +267,15 @@ public class YACLConfig {
         this.pingMediumColor = other.pingMediumColor;
         this.pingBadColor = other.pingBadColor;
         this.enableCoordinateColors = other.enableCoordinateColors;
-        this.coordinatesShowDecimals = other.coordinatesShowDecimals; // ДОДАНО НОВЕ ПОЛЕ
+        this.coordinatesShowDecimals = other.coordinatesShowDecimals;
         this.coordinatesColor = other.coordinatesColor;
         this.coordinatesXColor = other.coordinatesXColor;
         this.coordinatesYColor = other.coordinatesYColor;
         this.coordinatesZColor = other.coordinatesZColor;
         this.timeColor = other.timeColor;
         this.daysColor = other.daysColor;
+        this.dayColor = other.dayColor;
+        this.nightColor = other.nightColor;
     }
 
     // === ГРАФІЧНИЙ ІНТЕРФЕЙС ===
@@ -282,9 +293,8 @@ public class YACLConfig {
                         // Основні налаштування
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.main_settings"))
-                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
+                                .collapsed(false)
 
-                                // Головний перемикач
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.mod_enabled",
                                         "text.optimizationmod.option.mod_enabled.tooltip",
@@ -292,7 +302,6 @@ public class YACLConfig {
                                         () -> config.modEnabled,
                                         val -> config.modEnabled = val))
 
-                                // Сповіщення
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.show_notifications",
                                         "text.optimizationmod.option.show_notifications.tooltip",
@@ -304,7 +313,7 @@ public class YACLConfig {
                         // Елементи HUD
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.hud_elements"))
-                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
+                                .collapsed(false)
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.show_fps",
@@ -347,12 +356,21 @@ public class YACLConfig {
                                         false,
                                         () -> config.showDays,
                                         val -> config.showDays = val))
+
+                                // НОВЕ: один параметр для часу світу (час + день/ніч)
+                                .option(createBooleanOption(
+                                        "text.optimizationmod.option.show_world_time",
+                                        "text.optimizationmod.option.show_world_time.tooltip",
+                                        false,
+                                        () -> config.showWorldTime,
+                                        val -> config.showWorldTime = val))
+
                                 .build())
 
                         // Розширена статистика
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.advanced_stats"))
-                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
+                                .collapsed(false)
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.show_advanced_fps",
@@ -379,7 +397,7 @@ public class YACLConfig {
                         // Розмір та позиція
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.size_position"))
-                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
+                                .collapsed(false)
 
                                 .option(Option.<Float>createBuilder()
                                         .name(Text.translatable("text.optimizationmod.option.hud_scale"))
@@ -388,7 +406,6 @@ public class YACLConfig {
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.5f, 3.0f).step(0.1f))
                                         .build())
 
-                                // HUD Position як перемикач
                                 .option(Option.<HudPosition>createBuilder()
                                         .name(Text.translatable("text.optimizationmod.option.hud_position"))
                                         .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_position.tooltip")))
@@ -425,7 +442,7 @@ public class YACLConfig {
                         // Зовнішній вигляд тексту
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.text_appearance"))
-                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
+                                .collapsed(false)
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.hud_shadow",
@@ -452,7 +469,7 @@ public class YACLConfig {
                         // Основні кольори
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.separator.colors"))
-                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
+                                .collapsed(false)
 
                                 .option(Option.<Color>createBuilder()
                                         .name(Text.translatable("text.optimizationmod.option.coordinates_color"))
@@ -474,12 +491,27 @@ public class YACLConfig {
                                         0xFFFF55,
                                         () -> config.daysColor,
                                         val -> config.daysColor = val))
+
+                                // НОВЕ: кольори дня/ночі
+                                .option(createColorOption(
+                                        "text.optimizationmod.option.day_color",
+                                        "text.optimizationmod.option.day_color.tooltip",
+                                        0x55FF55,
+                                        () -> config.dayColor,
+                                        val -> config.dayColor = val))
+
+                                .option(createColorOption(
+                                        "text.optimizationmod.option.night_color",
+                                        "text.optimizationmod.option.night_color.tooltip",
+                                        0x5555FF,
+                                        () -> config.nightColor,
+                                        val -> config.nightColor = val))
                                 .build())
 
                         // Налаштування координат
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("text.optimizationmod.category.coordinate_settings"))
-                                .collapsed(false) // ЗА ЗАМОВЧУВАННЯМ ВІДКРИТІ
+                                .collapsed(false)
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.enable_coordinate_colors",
@@ -488,11 +520,10 @@ public class YACLConfig {
                                         () -> config.enableCoordinateColors,
                                         val -> config.enableCoordinateColors = val))
 
-                                // НОВА ОПЦІЯ ДЛЯ ДЕСЯТКОВИХ ЧИСЕЛ
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.coordinates_show_decimals",
                                         "text.optimizationmod.option.coordinates_show_decimals.tooltip",
-                                        true, // ЗА ЗАМОВЧУВАННЯМ УВІМКНЕНІ
+                                        true,
                                         () -> config.coordinatesShowDecimals,
                                         val -> config.coordinatesShowDecimals = val))
 
@@ -518,7 +549,6 @@ public class YACLConfig {
                                         val -> config.coordinatesZColor = val))
                                 .build())
 
-                        // Кольорові групи - ТЕПЕР ВСІ РОЗГОРНУТІ
                         .group(createFpsColorGroup(config))
                         .group(createMemoryColorGroup(config))
                         .group(createPingColorGroup(config))
@@ -610,7 +640,7 @@ public class YACLConfig {
     private static OptionGroup createFpsColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("text.optimizationmod.category.fps_colors"))
-                .collapsed(false) // РОЗГОРНУТО ЗА ЗАМОВЧУВАННЯМ
+                .collapsed(false)
                 .option(createColorOption(
                         "text.optimizationmod.option.fps_good_color",
                         "text.optimizationmod.option.fps_good_color.tooltip",
@@ -635,7 +665,7 @@ public class YACLConfig {
     private static OptionGroup createMemoryColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("text.optimizationmod.category.memory_colors"))
-                .collapsed(false) // РОЗГОРНУТО ЗА ЗАМОВЧУВАННЯМ
+                .collapsed(false)
                 .option(createColorOption(
                         "text.optimizationmod.option.memory_good_color",
                         "text.optimizationmod.option.memory_good_color.tooltip",
@@ -660,7 +690,7 @@ public class YACLConfig {
     private static OptionGroup createPingColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
                 .name(Text.translatable("text.optimizationmod.category.ping_colors"))
-                .collapsed(false) // РОЗГОРНУТО ЗА ЗАМОВЧУВАННЯМ
+                .collapsed(false)
                 .option(createColorOption(
                         "text.optimizationmod.option.ping_good_color",
                         "text.optimizationmod.option.ping_good_color.tooltip",
