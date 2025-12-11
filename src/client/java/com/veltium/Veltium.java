@@ -432,4 +432,3 @@ public class Veltium implements ClientModInitializer {
         }
     }
 }
-
