@@ -117,7 +117,12 @@ public class Veltium implements ClientModInitializer {
     private void renderHud(DrawContext drawContext, RenderTickCounter renderTickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
 
-        if (!config.modEnabled || client.player == null || client.getDebugHud().shouldShowDebugHud() || client.options.hudHidden) return;
+        // FIX for 1.21.9+ (F3 menu changed):
+        // was: client.getDebugHud().shouldShowDebugHud()
+        if (!config.modEnabled
+                || client.player == null
+                || client.debugHudEntryList.isF3Enabled()
+                || client.options.hudHidden) return;
 
         long currentTime = System.currentTimeMillis();
 
@@ -365,10 +370,10 @@ public class Veltium implements ClientModInitializer {
         cachedTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         if (client.world != null) {
-            long worldTime = client. world.getTimeOfDay() % 24000L;
+            long worldTime = client.world.getTimeOfDay() % 24000L;
             cachedIsDay = worldTime < 12000L;
 
-            long timeOfDay =client.world.getTimeOfDay();
+            long timeOfDay = client.world.getTimeOfDay();
             long currentDayTime = timeOfDay % 24000L;
             long totalSeconds = (currentDayTime * 1200L) / 24000L;
             long minutes = totalSeconds / 60L;
