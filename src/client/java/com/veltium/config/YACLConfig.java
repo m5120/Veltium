@@ -2,11 +2,12 @@ package com.veltium.config;
 
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.ChatFormatting;
 
 import java.awt.Color;
 import java.io.FileReader;
@@ -56,7 +57,7 @@ public class YACLConfig {
     public boolean showTime = false; // реальний час
     public boolean showDays = false;
 
-    // НОВЕ: один параметр для часу світу (час + день/ніч)
+    // === ЧАС СВІТУ ===
     public boolean showWorldTime = false;
 
     // === РОЗШИРЕНА СТАТИСТИКА ===
@@ -108,7 +109,7 @@ public class YACLConfig {
     // Колір днів
     public int daysColor = 0xFFFF55;
 
-    // НОВЕ: окремі кольори для дня/ночі (час світу)
+    // Кольори для дня/ночі (час світу)
     public int dayColor = 0x55FF55;   // зелений для дня
     public int nightColor = 0x5555FF; // синій/фіолетовий для ночі
 
@@ -120,11 +121,10 @@ public class YACLConfig {
         BOTTOM_RIGHT;
 
         @Override
-        public Text getDisplayName() {
-            return Text.translatable("text.optimizationmod.hud_position." + name().toLowerCase());
+        public Component getDisplayName() {
+            return Component.translatable("text.optimizationmod.hud_position." + name().toLowerCase());
         }
 
-        // Метод для переключення на наступну позицію
         public HudPosition next() {
             HudPosition[] values = values();
             int currentIndex = this.ordinal();
@@ -133,7 +133,6 @@ public class YACLConfig {
         }
     }
 
-    // === МЕТОДИ ДЛЯ КОЛЬОРІВ ===
     private static Color intToColor(int color) {
         return new Color(color);
     }
@@ -160,7 +159,6 @@ public class YACLConfig {
         return pingBadColor;
     }
 
-    // === ПЕРЕВІРКА НАЛАШТУВАНЬ ===
     public boolean shouldReduceLag() {
         return modEnabled && reduceLag && optimizationLevel > 0;
     }
@@ -186,7 +184,6 @@ public class YACLConfig {
         return (int) (maxParticles * multiplier);
     }
 
-    // === ЗАВАНТАЖЕННЯ ТА ЗБЕРЕЖЕННЯ ===
     public void load() {
         try {
             if (Files.exists(CONFIG_PATH)) {
@@ -240,10 +237,7 @@ public class YACLConfig {
         this.showCoordinates = other.showCoordinates;
         this.showTime = other.showTime;
         this.showDays = other.showDays;
-
-        // нове
         this.showWorldTime = other.showWorldTime;
-
         this.showAdvancedFps = other.showAdvancedFps;
         this.showAdvancedMemory = other.showAdvancedMemory;
         this.showAdvancedPing = other.showAdvancedPing;
@@ -278,21 +272,18 @@ public class YACLConfig {
         this.nightColor = other.nightColor;
     }
 
-    // === ГРАФІЧНИЙ ІНТЕРФЕЙС ===
     public static Screen createConfigScreen(Screen parent) {
         YACLConfig config = getInstance();
 
         return YetAnotherConfigLib.createBuilder()
-                .title(Text.translatable("text.optimizationmod.config.title"))
+                .title(Component.translatable("text.optimizationmod.config.title"))
 
-                // === HUD НАЛАШТУВАННЯ ===
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("text.optimizationmod.category.hud"))
-                        .tooltip(Text.translatable("text.optimizationmod.category.hud.tooltip"))
+                        .name(Component.translatable("text.optimizationmod.category.hud"))
+                        .tooltip(Component.translatable("text.optimizationmod.category.hud.tooltip"))
 
-                        // Основні налаштування
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.separator.main_settings"))
+                                .name(Component.translatable("text.optimizationmod.separator.main_settings"))
                                 .collapsed(false)
 
                                 .option(createBooleanOption(
@@ -310,9 +301,8 @@ public class YACLConfig {
                                         val -> config.showNotifications = val))
                                 .build())
 
-                        // Елементи HUD
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.separator.hud_elements"))
+                                .name(Component.translatable("text.optimizationmod.separator.hud_elements"))
                                 .collapsed(false)
 
                                 .option(createBooleanOption(
@@ -357,7 +347,6 @@ public class YACLConfig {
                                         () -> config.showDays,
                                         val -> config.showDays = val))
 
-                                // НОВЕ: один параметр для часу світу (час + день/ніч)
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.show_world_time",
                                         "text.optimizationmod.option.show_world_time.tooltip",
@@ -367,9 +356,8 @@ public class YACLConfig {
 
                                 .build())
 
-                        // Розширена статистика
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.separator.advanced_stats"))
+                                .name(Component.translatable("text.optimizationmod.separator.advanced_stats"))
                                 .collapsed(false)
 
                                 .option(createBooleanOption(
@@ -394,21 +382,20 @@ public class YACLConfig {
                                         val -> config.showAdvancedPing = val))
                                 .build())
 
-                        // Розмір та позиція
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.separator.size_position"))
+                                .name(Component.translatable("text.optimizationmod.separator.size_position"))
                                 .collapsed(false)
 
                                 .option(Option.<Float>createBuilder()
-                                        .name(Text.translatable("text.optimizationmod.option.hud_scale"))
-                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_scale.tooltip")))
+                                        .name(Component.translatable("text.optimizationmod.option.hud_scale"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_scale.tooltip")))
                                         .binding(1.0f, () -> config.hudScale, val -> config.hudScale = val)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.5f, 3.0f).step(0.1f))
                                         .build())
 
                                 .option(Option.<HudPosition>createBuilder()
-                                        .name(Text.translatable("text.optimizationmod.option.hud_position"))
-                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_position.tooltip")))
+                                        .name(Component.translatable("text.optimizationmod.option.hud_position"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_position.tooltip")))
                                         .binding(HudPosition.TOP_LEFT,
                                                 () -> config.hudPosition,
                                                 val -> config.hudPosition = val)
@@ -425,23 +412,22 @@ public class YACLConfig {
                                         val -> config.cornerSnap = val))
 
                                 .option(Option.<Integer>createBuilder()
-                                        .name(Text.translatable("text.optimizationmod.option.hud_x"))
-                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_x.tooltip")))
+                                        .name(Component.translatable("text.optimizationmod.option.hud_x"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_x.tooltip")))
                                         .binding(10, () -> config.hudX, val -> config.hudX = val)
                                         .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
                                         .build())
 
                                 .option(Option.<Integer>createBuilder()
-                                        .name(Text.translatable("text.optimizationmod.option.hud_y"))
-                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_y.tooltip")))
+                                        .name(Component.translatable("text.optimizationmod.option.hud_y"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_y.tooltip")))
                                         .binding(10, () -> config.hudY, val -> config.hudY = val)
                                         .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
                                         .build())
                                 .build())
 
-                        // Зовнішній вигляд тексту
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.separator.text_appearance"))
+                                .name(Component.translatable("text.optimizationmod.separator.text_appearance"))
                                 .collapsed(false)
 
                                 .option(createBooleanOption(
@@ -459,21 +445,20 @@ public class YACLConfig {
                                         val -> config.hudBold = val))
 
                                 .option(Option.<Float>createBuilder()
-                                        .name(Text.translatable("text.optimizationmod.option.hud_text_opacity"))
-                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.hud_text_opacity.tooltip")))
+                                        .name(Component.translatable("text.optimizationmod.option.hud_text_opacity"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_text_opacity.tooltip")))
                                         .binding(1.0f, () -> config.hudTextOpacity, val -> config.hudTextOpacity = val)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.3f, 1.0f).step(0.1f))
                                         .build())
                                 .build())
 
-                        // Основні кольори
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.separator.colors"))
+                                .name(Component.translatable("text.optimizationmod.separator.colors"))
                                 .collapsed(false)
 
                                 .option(Option.<Color>createBuilder()
-                                        .name(Text.translatable("text.optimizationmod.option.coordinates_color"))
-                                        .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.coordinates_color.tooltip")))
+                                        .name(Component.translatable("text.optimizationmod.option.coordinates_color"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.coordinates_color.tooltip")))
                                         .binding(intToColor(0xFFFFFF), () -> intToColor(config.coordinatesColor), val -> config.coordinatesColor = colorToInt(val))
                                         .controller(ColorControllerBuilder::create)
                                         .build())
@@ -492,7 +477,6 @@ public class YACLConfig {
                                         () -> config.daysColor,
                                         val -> config.daysColor = val))
 
-                                // НОВЕ: кольори дня/ночі
                                 .option(createColorOption(
                                         "text.optimizationmod.option.day_color",
                                         "text.optimizationmod.option.day_color.tooltip",
@@ -508,9 +492,8 @@ public class YACLConfig {
                                         val -> config.nightColor = val))
                                 .build())
 
-                        // Налаштування координат
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("text.optimizationmod.category.coordinate_settings"))
+                                .name(Component.translatable("text.optimizationmod.category.coordinate_settings"))
                                 .collapsed(false)
 
                                 .option(createBooleanOption(
@@ -555,73 +538,23 @@ public class YACLConfig {
 
                         .build())
 
-                // === ОПТИМІЗАЦІЯ ===
-                .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("text.optimizationmod.category.optimization"))
-                        .tooltip(Text.translatable("text.optimizationmod.category.optimization.tooltip"))
-
-                        .option(Option.<Integer>createBuilder()
-                                .name(Text.translatable("text.optimizationmod.option.optimization_level"))
-                                .description(OptionDescription.of(Text.translatable("text.optimizationmod.option.optimization_level.tooltip")))
-                                .binding(0, () -> config.optimizationLevel, val -> config.optimizationLevel = val)
-                                .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 3).step(1))
-                                .build())
-
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.reduce_lag",
-                                "text.optimizationmod.option.reduce_lag.tooltip",
-                                false,
-                                () -> config.reduceLag,
-                                val -> config.reduceLag = val))
-
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.optimize_rendering",
-                                "text.optimizationmod.option.optimize_rendering.tooltip",
-                                false,
-                                () -> config.optimizeRendering,
-                                val -> config.optimizeRendering = val))
-
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.cull_particles",
-                                "text.optimizationmod.option.cull_particles.tooltip",
-                                true,
-                                () -> config.cullParticles,
-                                val -> config.cullParticles = val))
-
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.entity_culling",
-                                "text.optimizationmod.option.entity_culling.tooltip",
-                                false,
-                                () -> config.enableEntityCulling,
-                                val -> config.enableEntityCulling = val))
-
-                        .option(createBooleanOption(
-                                "text.optimizationmod.option.optimize_chunks",
-                                "text.optimizationmod.option.optimize_chunks.tooltip",
-                                false,
-                                () -> config.optimizeChunks,
-                                val -> config.optimizeChunks = val))
-
-                        .build())
-
                 .save(config::save)
                 .build()
                 .generateScreen(parent);
     }
 
-    // === ДОПОМІЖНІ МЕТОДИ ===
     private static Option<Boolean> createBooleanOption(String nameKey, String tooltipKey,
                                                        boolean defaultValue,
                                                        java.util.function.Supplier<Boolean> getter,
                                                        java.util.function.Consumer<Boolean> setter) {
         return Option.<Boolean>createBuilder()
-                .name(Text.translatable(nameKey))
-                .description(OptionDescription.of(Text.translatable(tooltipKey)))
+                .name(Component.translatable(nameKey))
+                .description(OptionDescription.of(Component.translatable(tooltipKey)))
                 .binding(defaultValue, getter, setter)
                 .controller(opt -> BooleanControllerBuilder.create(opt)
-                        .formatValue(val -> val ?
-                                Text.translatable("text.optimizationmod.yes").formatted(net.minecraft.util.Formatting.GREEN) :
-                                Text.translatable("text.optimizationmod.no").formatted(net.minecraft.util.Formatting.RED)))
+                        .formatValue(val -> val
+                                ? Component.translatable("text.optimizationmod.yes").withStyle(ChatFormatting.GREEN)
+                                : Component.translatable("text.optimizationmod.no").withStyle(ChatFormatting.RED)))
                 .build();
     }
 
@@ -630,8 +563,8 @@ public class YACLConfig {
                                                    java.util.function.Supplier<Integer> getter,
                                                    java.util.function.Consumer<Integer> setter) {
         return Option.<Color>createBuilder()
-                .name(Text.translatable(nameKey))
-                .description(OptionDescription.of(Text.translatable(tooltipKey)))
+                .name(Component.translatable(nameKey))
+                .description(OptionDescription.of(Component.translatable(tooltipKey)))
                 .binding(intToColor(defaultValue), () -> intToColor(getter.get()), val -> setter.accept(colorToInt(val)))
                 .controller(ColorControllerBuilder::create)
                 .build();
@@ -639,7 +572,7 @@ public class YACLConfig {
 
     private static OptionGroup createFpsColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
-                .name(Text.translatable("text.optimizationmod.category.fps_colors"))
+                .name(Component.translatable("text.optimizationmod.category.fps_colors"))
                 .collapsed(false)
                 .option(createColorOption(
                         "text.optimizationmod.option.fps_good_color",
@@ -664,7 +597,7 @@ public class YACLConfig {
 
     private static OptionGroup createMemoryColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
-                .name(Text.translatable("text.optimizationmod.category.memory_colors"))
+                .name(Component.translatable("text.optimizationmod.category.memory_colors"))
                 .collapsed(false)
                 .option(createColorOption(
                         "text.optimizationmod.option.memory_good_color",
@@ -689,7 +622,7 @@ public class YACLConfig {
 
     private static OptionGroup createPingColorGroup(YACLConfig config) {
         return OptionGroup.createBuilder()
-                .name(Text.translatable("text.optimizationmod.category.ping_colors"))
+                .name(Component.translatable("text.optimizationmod.category.ping_colors"))
                 .collapsed(false)
                 .option(createColorOption(
                         "text.optimizationmod.option.ping_good_color",

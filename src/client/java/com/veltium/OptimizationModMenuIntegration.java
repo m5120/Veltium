@@ -8,7 +8,7 @@ public class OptimizationModMenuIntegration implements ModMenuApi {
 
 	@Override
 	public ConfigScreenFactory<?> getModConfigScreenFactory() {
-		// використовуєм YACL
+		// YACLConfig
 		return YACLConfig::createConfigScreen;
 	}
 }
