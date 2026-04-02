@@ -290,10 +290,9 @@ public class Veltium implements ClientModInitializer {
 
         if (hudLines.isEmpty()) return;
 
-        // Всі розрахунки в нескейлованих одиницях (як їх бачить font)
-        final int LINE_H = 10; // висота рядка в нескейлованих одиницях
+        final int LINE_H = 10;
         final int PADDING = 4;
-        int totalRawHeight = hudLines.size() * LINE_H; // загальна висота без scale
+        int totalRawHeight = hudLines.size() * LINE_H;
 
         int screenWidth  = client.getWindow().getGuiScaledWidth();
         int screenHeight = client.getWindow().getGuiScaledHeight();
@@ -303,12 +302,10 @@ public class Veltium implements ClientModInitializer {
 
             int textWidth = client.font.width(line.text); // ширина в нескейлованих одиницях
 
-            // baseX і baseY — реальні координати верхнього лівого кута блоку тексту на екрані
             int baseX;
             int baseY;
 
             if (config.cornerSnap) {
-                // snap: притягуємо до кута з відступом 1px
                 baseX = switch (config.hudPosition) {
                     case TOP_RIGHT, BOTTOM_RIGHT -> screenWidth - (int)(textWidth * config.hudScale) - 1;
                     default -> 1;
@@ -319,7 +316,6 @@ public class Veltium implements ClientModInitializer {
                     default -> 1 + (int)(i * LINE_H * config.hudScale);
                 };
             } else {
-                // вільне позиціонування через hudX/hudY
                 baseX = switch (config.hudPosition) {
                     case TOP_RIGHT, BOTTOM_RIGHT -> Math.max(0, screenWidth - (int)(textWidth * config.hudScale) - config.hudX);
                     default -> Math.max(0, config.hudX);
@@ -335,7 +331,6 @@ public class Veltium implements ClientModInitializer {
             guiGraphics.pose().translate((float) baseX, (float) baseY);
             guiGraphics.pose().scale(config.hudScale, config.hudScale);
 
-            // після scale малюємо від (0,0) в нескейлованих одиницях
             if (config.hudBackgroundColor != 0 && config.hudBackgroundOpacity > 0) {
                 int bgColor = (config.hudBackgroundColor & 0xFFFFFF) | ((int)(config.hudBackgroundOpacity * 255) << 24);
                 guiGraphics.fill(-PADDING, -PADDING, textWidth + PADDING, LINE_H - PADDING + 2, bgColor);
