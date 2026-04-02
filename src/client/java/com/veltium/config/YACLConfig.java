@@ -39,7 +39,7 @@ public class YACLConfig {
     public int optimizationLevel = 0;
     public int maxParticles = 100;
 
-    // === ОПТИМІЗАЦІЯ БІЛЬШІСТЬ false ТОМУ-ЩО ЦЕ ДОСИТЬ ПІДГАН ОПТИМІЗАЦІЯ А НЕСТАБІЛЬНА ===
+    // === ОПТИМІЗАЦІЯ (Старі методи) ===
     public boolean reduceLag = false;
     public boolean optimizeRendering = false;
     public boolean cullParticles = true;
@@ -110,8 +110,8 @@ public class YACLConfig {
     public int daysColor = 0xFFFF55;
 
     // Кольори для дня/ночі (час світу)
-    public int dayColor = 0x55FF55;   // зелений для дня
-    public int nightColor = 0x5555FF; // синій/фіолетовий для ночі
+    public int dayColor = 0x55FF55;
+    public int nightColor = 0x5555FF;
 
     // === ENUM ДЛЯ ПОЗИЦІЙ HUD ===
     public enum HudPosition implements NameableEnum {

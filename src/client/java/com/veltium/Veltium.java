@@ -27,7 +27,6 @@ public class Veltium implements ClientModInitializer {
     public static YACLConfig config;
     private static KeyMapping configKeyMapping;
 
-    // кеш для HUD елементів
     private long lastHudUpdate = 0;
     private long lastGC = 0;
     private String cachedTime = "";
@@ -36,11 +35,9 @@ public class Veltium implements ClientModInitializer {
     private boolean messageSent = false;
     private final List<ColoredText> hudLines = new ArrayList<>();
 
-    // кеш для світу
     private String cachedWorldTime = "";
     private boolean cachedIsDay = true;
 
-    // статистики для мін/сер/макс
     private final ArrayDeque<Integer> fpsHistory = new ArrayDeque<>(MAX_HISTORY);
     private final ArrayDeque<Double> memoryHistory = new ArrayDeque<>(MAX_HISTORY);
     private final ArrayDeque<Integer> pingHistory = new ArrayDeque<>(MAX_HISTORY);
@@ -66,9 +63,6 @@ public class Veltium implements ClientModInitializer {
     public void onInitializeClient() {
         config = YACLConfig.getInstance();
 
-        // KeyBindingHelper → KeyMappingHelper (Fabric API 26.1 rename)
-        // registerKeyBinding → registerKeyMapping
-        // Категорія — рядок translation key, не KeyMapping.Categories (якого не існує)
         configKeyMapping = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.optimizationmod.config",
                 GLFW.GLFW_KEY_O,
@@ -77,21 +71,17 @@ public class Veltium implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!messageSent && client.player != null && config.modEnabled && config.showNotifications) {
-                // inGameHud.getChatHud().addMessage() → gui.getChat().addMessage() (Mojang mappings)
                 client.gui.getChat().addClientSystemMessage(Component.translatable("text.optimizationmod.message.loaded"));
                 messageSent = true;
             }
 
-            // wasPressed() → consumeClick() (Mojang mappings)
             while (configKeyMapping.consumeClick()) {
-                // currentScreen → screen (Mojang mappings)
                 client.setScreen(YACLConfig.createConfigScreen(client.screen));
             }
 
             applyOptimizations(client);
         });
 
-        // HudRenderCallback → HudElementRegistry (Fabric API 26.1)
         HudElementRegistry.attachElementAfter(
                 VanillaHudElements.BOSS_BAR,
                 Identifier.fromNamespaceAndPath("veltium", "main_hud"),
@@ -107,15 +97,12 @@ public class Veltium implements ClientModInitializer {
         long currentTime = System.currentTimeMillis();
 
         if (config.optimizationLevel >= 2) {
-            // getBobView().setValue() → bobView().set() (Mojang mappings)
             client.options.bobView().set(false);
             client.options.entityShadows().set(false);
         }
 
         if (config.optimizationLevel >= 3) {
-            // CloudRenderMode → CloudStatus (net.minecraft.client) (Mojang mappings)
             client.options.cloudStatus().set(net.minecraft.client.CloudStatus.OFF);
-            // ParticlesMode → ParticleStatus (net.minecraft.client.particle) (Mojang mappings)
             client.options.particles().set(net.minecraft.server.level.ParticleStatus.DECREASED);
         }
 
@@ -129,12 +116,9 @@ public class Veltium implements ClientModInitializer {
         }
     }
 
-    // HUD рендер: (DrawContext, RenderTickCounter) → (GuiGraphics, DeltaTracker) (Mojang mappings)
     private void renderHud(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
 
-        // debugHudEntryList.isF3Enabled() → getDebugOverlay().showDebugScreen() (Mojang mappings)
-        // options.hudHidden → options.hideGui (Mojang mappings)
         if (!config.modEnabled
                 || client.player == null
                 || client.getDebugOverlay().showDebugScreen()
@@ -148,18 +132,12 @@ public class Veltium implements ClientModInitializer {
             lastHudUpdate = currentTime;
         }
 
-        // getMatrices() → pose() — повертає PoseStack (Mojang mappings)
-        // scale потребує 3 аргументи (x, y, z) у PoseStack
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().scale(config.hudScale, config.hudScale);
         renderHudElements(guiGraphics, client);
-        guiGraphics.pose().popMatrix();
     }
 
     private void updateStatistics(Minecraft client) {
         long currentTime = System.currentTimeMillis();
 
-        // getCurrentFps() → getFps() (Mojang mappings)
         int currentFps = client.getFps();
         if (fpsHistory.size() >= MAX_HISTORY) fpsHistory.removeFirst();
         fpsHistory.addLast(currentFps);
@@ -251,7 +229,6 @@ public class Veltium implements ClientModInitializer {
             }
         }
 
-        // getNetworkHandler() → getConnection() (Mojang mappings)
         if (config.showPing && client.getConnection() != null) {
             int pingColor = config.getPingColor(cachedPing);
 
@@ -288,7 +265,6 @@ public class Veltium implements ClientModInitializer {
             hudLines.add(new ColoredText(timeText, config.timeColor));
         }
 
-        // client.world → client.level, getTimeOfDay() → getDayTime() (Mojang mappings)
         if (config.showDays && client.level != null) {
             long worldTime = client.level.getOverworldClockTime();
             long days = worldTime / 24000L;
@@ -314,30 +290,64 @@ public class Veltium implements ClientModInitializer {
 
         if (hudLines.isEmpty()) return;
 
-        int totalHeight = hudLines.size() * 12 + 8;
-        int padding = 4;
+        // Всі розрахунки в нескейлованих одиницях (як їх бачить font)
+        final int LINE_H = 10; // висота рядка в нескейлованих одиницях
+        final int PADDING = 4;
+        int totalRawHeight = hudLines.size() * LINE_H; // загальна висота без scale
+
+        int screenWidth  = client.getWindow().getGuiScaledWidth();
+        int screenHeight = client.getWindow().getGuiScaledHeight();
 
         for (int i = 0; i < hudLines.size(); i++) {
             ColoredText line = hudLines.get(i);
 
-            // textRenderer → font (Mojang mappings)
-            int textWidth = client.font.width(line.text);
+            int textWidth = client.font.width(line.text); // ширина в нескейлованих одиницях
 
-            int finalX = getHudX(client, textWidth);
-            int finalY = getHudY(client, totalHeight) + i * 12;
+            // baseX і baseY — реальні координати верхнього лівого кута блоку тексту на екрані
+            int baseX;
+            int baseY;
 
+            if (config.cornerSnap) {
+                // snap: притягуємо до кута з відступом 1px
+                baseX = switch (config.hudPosition) {
+                    case TOP_RIGHT, BOTTOM_RIGHT -> screenWidth - (int)(textWidth * config.hudScale) - 1;
+                    default -> 1;
+                };
+                baseY = switch (config.hudPosition) {
+                    case BOTTOM_LEFT, BOTTOM_RIGHT ->
+                            screenHeight - (int)(totalRawHeight * config.hudScale) + (int)(i * LINE_H * config.hudScale) - 1;
+                    default -> 1 + (int)(i * LINE_H * config.hudScale);
+                };
+            } else {
+                // вільне позиціонування через hudX/hudY
+                baseX = switch (config.hudPosition) {
+                    case TOP_RIGHT, BOTTOM_RIGHT -> Math.max(0, screenWidth - (int)(textWidth * config.hudScale) - config.hudX);
+                    default -> Math.max(0, config.hudX);
+                };
+                baseY = switch (config.hudPosition) {
+                    case BOTTOM_LEFT, BOTTOM_RIGHT ->
+                            Math.max(0, screenHeight - (int)(totalRawHeight * config.hudScale) - config.hudY) + (int)(i * LINE_H * config.hudScale);
+                    default -> Math.max(0, config.hudY) + (int)(i * LINE_H * config.hudScale);
+                };
+            }
+
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate((float) baseX, (float) baseY);
+            guiGraphics.pose().scale(config.hudScale, config.hudScale);
+
+            // після scale малюємо від (0,0) в нескейлованих одиницях
             if (config.hudBackgroundColor != 0 && config.hudBackgroundOpacity > 0) {
-                // fill() потребує ARGB — альфа у старших 8 бітах (Mojang 26.1)
                 int bgColor = (config.hudBackgroundColor & 0xFFFFFF) | ((int)(config.hudBackgroundOpacity * 255) << 24);
-                guiGraphics.fill(finalX - padding, finalY - padding,
-                        finalX + textWidth + padding, finalY + 12 - padding, bgColor);
+                guiGraphics.fill(-PADDING, -PADDING, textWidth + PADDING, LINE_H - PADDING + 2, bgColor);
             }
 
             if (config.showCoordinates && config.enableCoordinateColors && line.text.contains("XYZ")) {
-                renderColoredCoordinates(guiGraphics, client, line.text, finalX, finalY);
+                renderColoredCoordinates(guiGraphics, client, line.text, 0, 0);
             } else {
-                renderTextLine(guiGraphics, client, line.text, finalX, finalY, line.color);
+                renderTextLine(guiGraphics, client, line.text, 0, 0, line.color);
             }
+
+            guiGraphics.pose().popMatrix();
         }
     }
 
@@ -378,8 +388,6 @@ public class Veltium implements ClientModInitializer {
     }
 
     private void updateCache(Minecraft client) {
-        // getNetworkHandler() → getConnection() (Mojang mappings)
-        // getPlayerListEntry() → getPlayerInfo() (Mojang mappings)
         if (client.getConnection() != null && client.player != null) {
             try {
                 var playerEntry = client.getConnection().getPlayerInfo(client.player.getUUID());
@@ -392,7 +400,6 @@ public class Veltium implements ClientModInitializer {
         LocalDateTime now = LocalDateTime.now();
         cachedTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
-        // client.world → client.level, getTimeOfDay() → getDayTime() (Mojang mappings)
         if (client.level != null) {
             long worldTime = client.level.getOverworldClockTime() % 24000L;
             cachedIsDay = worldTime < 12000L;
@@ -417,48 +424,9 @@ public class Veltium implements ClientModInitializer {
 
         if (config.hudBold) mutableText = mutableText.withStyle(ChatFormatting.BOLD);
 
-        // В 26.1 drawString потребує ARGB (альфа != 0), інакше текст прозорий
         int alpha = (int)(Math.max(0.1f, config.hudTextOpacity) * 255);
         int finalColor = (alpha << 24) | (color & 0xFFFFFF);
 
-        // drawTextWithShadow/drawText → drawString(font, component, x, y, color, shadow) (Mojang mappings)
         guiGraphics.text(client.font, mutableText, x, y, finalColor, config.hudShadow);
-    }
-
-    private int getHudX(Minecraft client, int textWidth) {
-        // getWindow().getScaledWidth() → getWindow().getGuiScaledWidth() (Mojang mappings)
-        int screenWidth = (int)(client.getWindow().getGuiScaledWidth() / config.hudScale);
-
-        if (config.cornerSnap) {
-            return switch (config.hudPosition) {
-                case TOP_RIGHT, BOTTOM_RIGHT -> screenWidth - textWidth - 1;
-                default -> 1;
-            };
-        } else {
-            int scaledOffsetX = (int)(config.hudX / config.hudScale);
-            return switch (config.hudPosition) {
-                case TOP_RIGHT, BOTTOM_RIGHT -> Math.max(0, screenWidth - textWidth - scaledOffsetX);
-                default -> Math.max(0, scaledOffsetX);
-            };
-        }
-    }
-
-    private int getHudY(Minecraft client, int hudHeight) {
-        // getWindow().getScaledHeight() → getWindow().getGuiScaledHeight() (Mojang mappings)
-        int screenHeight = (int)(client.getWindow().getGuiScaledHeight() / config.hudScale);
-        int scaledHudHeight = (int)(hudHeight / config.hudScale);
-
-        if (config.cornerSnap) {
-            return switch (config.hudPosition) {
-                case BOTTOM_LEFT, BOTTOM_RIGHT -> screenHeight - scaledHudHeight - 1;
-                default -> 1;
-            };
-        } else {
-            int scaledOffsetY = (int)(config.hudY / config.hudScale);
-            return switch (config.hudPosition) {
-                case BOTTOM_LEFT, BOTTOM_RIGHT -> Math.max(0, screenHeight - scaledHudHeight - scaledOffsetY);
-                default -> Math.max(0, scaledOffsetY);
-            };
-        }
     }
 }
