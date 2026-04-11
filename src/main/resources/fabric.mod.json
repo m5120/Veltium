@@ -24,7 +24,8 @@
 		],
 		"modmenu": [
 			"com.veltium.OptimizationModMenuIntegration"
-		]
+		],
+		"sodium:config_api_user": ["com.veltium.config.VeltiumSodiumConfig"]
 	},
 
 	"mixins": [
@@ -43,6 +44,7 @@
 
 	},
 	"suggests": {
-		"modmenu": "*"
+		"modmenu": "*",
+		"sodium": ">=0.8.0"
 	}
 }

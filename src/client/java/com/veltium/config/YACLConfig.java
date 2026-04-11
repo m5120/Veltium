@@ -98,7 +98,7 @@ public class YACLConfig {
 
     // Кольори координат
     public boolean enableCoordinateColors = false;
-    public boolean coordinatesShowDecimals = true; // ЗА ЗАМОВЧУВАННЯМ УВІМКНЕНІ ДЕСЯТКОВІ
+    public boolean coordinatesShowDecimals = true;
     public int coordinatesColor = 0xFFFFFF;
     public int coordinatesXColor = 0xFF5555;
     public int coordinatesYColor = 0x55FF55;
@@ -116,8 +116,10 @@ public class YACLConfig {
     // === ENUM ДЛЯ ПОЗИЦІЙ HUD ===
     public enum HudPosition implements NameableEnum {
         TOP_LEFT,
+        TOP_CENTER,
         TOP_RIGHT,
         BOTTOM_LEFT,
+        BOTTOM_CENTER,
         BOTTOM_RIGHT;
 
         @Override
@@ -130,6 +132,18 @@ public class YACLConfig {
             int currentIndex = this.ordinal();
             int nextIndex = (currentIndex + 1) % values.length;
             return values[nextIndex];
+        }
+
+        public boolean isCenterX() {
+            return this == TOP_CENTER || this == BOTTOM_CENTER;
+        }
+
+        public boolean isBottom() {
+            return this == BOTTOM_LEFT || this == BOTTOM_RIGHT || this == BOTTOM_CENTER;
+        }
+
+        public boolean isRight() {
+            return this == TOP_RIGHT || this == BOTTOM_RIGHT;
         }
     }
 

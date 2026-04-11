@@ -3,7 +3,6 @@
 	"package": "com.veltium.mixin.client",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
-
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -17,6 +17,10 @@ repositories {
 	maven { url = "https://maven.isxander.dev/releases" }
 	maven { url = "https://maven.shedaniel.me/" }
 	maven { url = "https://api.modrinth.com/maven" }
+	maven {
+		name "CaffeineMC"
+		url "https://maven.caffeinemc.net/releases"
+	}
 }
 
 loom {
@@ -40,6 +44,7 @@ dependencies {
 	}
 
 	implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+	implementation "maven.modrinth:sodium:${project.sodium_api_version}"
 }
 
 processResources {

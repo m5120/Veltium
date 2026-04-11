@@ -52,10 +52,16 @@ public class Veltium implements ClientModInitializer {
     private static class ColoredText {
         final String text;
         final int color;
+        final boolean strikethrough;
 
         ColoredText(String text, int color) {
+            this(text, color, false);
+        }
+
+        ColoredText(String text, int color, boolean strikethrough) {
             this.text = text;
             this.color = color;
+            this.strikethrough = strikethrough;
         }
     }
 
@@ -230,16 +236,18 @@ public class Veltium implements ClientModInitializer {
         }
 
         if (config.showPing && client.getConnection() != null) {
-            int pingColor = config.getPingColor(cachedPing);
+            boolean isSinglePlayer = client.hasSingleplayerServer();
+            int pingColor = isSinglePlayer ? 0x888780 : config.getPingColor(cachedPing);
 
+            String pingString;
             if (config.showAdvancedPing && !pingHistory.isEmpty()) {
-                String pingText = Component.translatable("text.optimizationmod.hud.ping_stats",
+                pingString = Component.translatable("text.optimizationmod.hud.ping_stats",
                         cachedPing, getPingMin(), getPingAvg(), getPingMax()).getString();
-                hudLines.add(new ColoredText(pingText, pingColor));
             } else {
-                String pingText = Component.translatable("text.optimizationmod.hud.ping", cachedPing).getString();
-                hudLines.add(new ColoredText(pingText, pingColor));
+                pingString = Component.translatable("text.optimizationmod.hud.ping", cachedPing).getString();
             }
+
+            hudLines.add(new ColoredText(pingString, pingColor, isSinglePlayer));
         }
 
         if (config.showCoordinates && client.player != null) {
@@ -266,9 +274,7 @@ public class Veltium implements ClientModInitializer {
         }
 
         if (config.showDays && client.level != null) {
-            long worldTime = client.level.getOverworldClockTime();
-            long days = worldTime / 24000L;
-            String daysText = Component.translatable("text.optimizationmod.hud.days", days).getString();
+            String daysText = Component.translatable("text.optimizationmod.hud.days", cachedDays).getString();
             hudLines.add(new ColoredText(daysText, config.daysColor));
         }
 
@@ -291,8 +297,9 @@ public class Veltium implements ClientModInitializer {
         if (hudLines.isEmpty()) return;
 
         final int LINE_H = 10;
-        final int PADDING = 4;
         int totalRawHeight = hudLines.size() * LINE_H;
+
+        final int BOTTOM_CENTER_MARGIN = 39;
 
         int screenWidth  = client.getWindow().getGuiScaledWidth();
         int screenHeight = client.getWindow().getGuiScaledHeight();
@@ -300,29 +307,35 @@ public class Veltium implements ClientModInitializer {
         for (int i = 0; i < hudLines.size(); i++) {
             ColoredText line = hudLines.get(i);
 
-            int textWidth = client.font.width(line.text); // ширина в нескейлованих одиницях
+            int textWidth = client.font.width(line.text);
 
             int baseX;
             int baseY;
 
             if (config.cornerSnap) {
                 baseX = switch (config.hudPosition) {
-                    case TOP_RIGHT, BOTTOM_RIGHT -> screenWidth - (int)(textWidth * config.hudScale) - 1;
-                    default -> 1;
+                    case TOP_RIGHT, BOTTOM_RIGHT   -> screenWidth - (int)(textWidth * config.hudScale) - 1;
+                    case TOP_CENTER, BOTTOM_CENTER -> (screenWidth - (int)(textWidth * config.hudScale)) / 2;
+                    default                        -> 1;
                 };
                 baseY = switch (config.hudPosition) {
                     case BOTTOM_LEFT, BOTTOM_RIGHT ->
                             screenHeight - (int)(totalRawHeight * config.hudScale) + (int)(i * LINE_H * config.hudScale) - 1;
+                    case BOTTOM_CENTER ->
+                            screenHeight - BOTTOM_CENTER_MARGIN - (int)(totalRawHeight * config.hudScale) + (int)(i * LINE_H * config.hudScale);
                     default -> 1 + (int)(i * LINE_H * config.hudScale);
                 };
             } else {
                 baseX = switch (config.hudPosition) {
-                    case TOP_RIGHT, BOTTOM_RIGHT -> Math.max(0, screenWidth - (int)(textWidth * config.hudScale) - config.hudX);
-                    default -> Math.max(0, config.hudX);
+                    case TOP_RIGHT, BOTTOM_RIGHT   -> Math.max(0, screenWidth - (int)(textWidth * config.hudScale) - config.hudX);
+                    case TOP_CENTER, BOTTOM_CENTER -> (screenWidth - (int)(textWidth * config.hudScale)) / 2;
+                    default                        -> Math.max(0, config.hudX);
                 };
                 baseY = switch (config.hudPosition) {
                     case BOTTOM_LEFT, BOTTOM_RIGHT ->
                             Math.max(0, screenHeight - (int)(totalRawHeight * config.hudScale) - config.hudY) + (int)(i * LINE_H * config.hudScale);
+                    case BOTTOM_CENTER ->
+                            screenHeight - BOTTOM_CENTER_MARGIN - (int)(totalRawHeight * config.hudScale) - config.hudY + (int)(i * LINE_H * config.hudScale);
                     default -> Math.max(0, config.hudY) + (int)(i * LINE_H * config.hudScale);
                 };
             }
@@ -331,15 +344,10 @@ public class Veltium implements ClientModInitializer {
             guiGraphics.pose().translate((float) baseX, (float) baseY);
             guiGraphics.pose().scale(config.hudScale, config.hudScale);
 
-            if (config.hudBackgroundColor != 0 && config.hudBackgroundOpacity > 0) {
-                int bgColor = (config.hudBackgroundColor & 0xFFFFFF) | ((int)(config.hudBackgroundOpacity * 255) << 24);
-                guiGraphics.fill(-PADDING, -PADDING, textWidth + PADDING, LINE_H - PADDING + 2, bgColor);
-            }
-
             if (config.showCoordinates && config.enableCoordinateColors && line.text.contains("XYZ")) {
                 renderColoredCoordinates(guiGraphics, client, line.text, 0, 0);
             } else {
-                renderTextLine(guiGraphics, client, line.text, 0, 0, line.color);
+                renderTextLine(guiGraphics, client, line.text, 0, 0, line.color, line.strikethrough);
             }
 
             guiGraphics.pose().popMatrix();
@@ -349,7 +357,7 @@ public class Veltium implements ClientModInitializer {
     private void renderColoredCoordinates(GuiGraphicsExtractor guiGraphics, Minecraft client, String text, int x, int y) {
         int colonIndex = text.indexOf(':');
         if (colonIndex == -1) {
-            renderTextLine(guiGraphics, client, text, x, y, config.coordinatesColor);
+            renderTextLine(guiGraphics, client, text, x, y, config.coordinatesColor, false);
             return;
         }
 
@@ -359,26 +367,25 @@ public class Veltium implements ClientModInitializer {
 
         if (parts.length >= 3) {
             int currentX = x;
-            int spacing = config.hudBold ? 2 : 1;
 
-            renderTextLine(guiGraphics, client, prefix, currentX, y, config.coordinatesColor);
+            renderTextLine(guiGraphics, client, prefix, currentX, y, config.coordinatesColor, false);
             currentX += client.font.width(prefix);
 
-            renderTextLine(guiGraphics, client, parts[0], currentX, y, config.coordinatesXColor);
-            currentX += client.font.width(parts[0]) + spacing;
+            renderTextLine(guiGraphics, client, parts[0], currentX, y, config.coordinatesXColor, false);
+            currentX += client.font.width(parts[0]);
 
-            renderTextLine(guiGraphics, client, " ", currentX, y, config.coordinatesColor);
+            renderTextLine(guiGraphics, client, " ", currentX, y, config.coordinatesColor, false);
             currentX += client.font.width(" ");
 
-            renderTextLine(guiGraphics, client, parts[1], currentX, y, config.coordinatesYColor);
-            currentX += client.font.width(parts[1]) + spacing;
+            renderTextLine(guiGraphics, client, parts[1], currentX, y, config.coordinatesYColor, false);
+            currentX += client.font.width(parts[1]);
 
-            renderTextLine(guiGraphics, client, " ", currentX, y, config.coordinatesColor);
+            renderTextLine(guiGraphics, client, " ", currentX, y, config.coordinatesColor, false);
             currentX += client.font.width(" ");
 
-            renderTextLine(guiGraphics, client, parts[2], currentX, y, config.coordinatesZColor);
+            renderTextLine(guiGraphics, client, parts[2], currentX, y, config.coordinatesZColor, false);
         } else {
-            renderTextLine(guiGraphics, client, text, x, y, config.coordinatesColor);
+            renderTextLine(guiGraphics, client, text, x, y, config.coordinatesColor, false);
         }
     }
 
@@ -392,32 +399,32 @@ public class Veltium implements ClientModInitializer {
             }
         }
 
-        LocalDateTime now = LocalDateTime.now();
-        cachedTime = now.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        cachedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
         if (client.level != null) {
             long worldTime = client.level.getOverworldClockTime() % 24000L;
             cachedIsDay = worldTime < 12000L;
 
-            long timeOfDay = client.level.getOverworldClockTime();
-            long currentDayTime = timeOfDay % 24000L;
-            long totalSeconds = (currentDayTime * 1200L) / 24000L;
+            long totalSeconds = worldTime * 1200L / 24000L;
             long minutes = totalSeconds / 60L;
             long seconds = totalSeconds % 60L;
-
             cachedWorldTime = String.format("%02d:%02d", minutes, seconds);
 
-            long days = client.level.getOverworldClockTime() / 24000L;
-            cachedDays = days;
+            cachedDays = client.level.getOverworldClockTime() / 24000L;
         }
     }
 
     private void renderTextLine(GuiGraphicsExtractor guiGraphics, Minecraft client, String text, int x, int y, int color) {
+        renderTextLine(guiGraphics, client, text, x, y, color, false);
+    }
+
+    private void renderTextLine(GuiGraphicsExtractor guiGraphics, Minecraft client, String text, int x, int y, int color, boolean strikethrough) {
         if (text == null || text.isEmpty()) return;
 
         MutableComponent mutableText = Component.literal(text);
 
         if (config.hudBold) mutableText = mutableText.withStyle(ChatFormatting.BOLD);
+        if (strikethrough) mutableText = mutableText.withStyle(ChatFormatting.STRIKETHROUGH);
 
         int alpha = (int)(Math.max(0.1f, config.hudTextOpacity) * 255);
         int finalColor = (alpha << 24) | (color & 0xFFFFFF);
