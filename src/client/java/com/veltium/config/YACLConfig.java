@@ -35,11 +35,10 @@ public class YACLConfig {
     public boolean showNotifications = true;
     public boolean cornerSnap = false;
 
-    // === ОСНОВНІ НАЛАШТУВАННЯ ===
     public int optimizationLevel = 0;
     public int maxParticles = 100;
 
-    // === ОПТИМІЗАЦІЯ (Старі методи) ===
+    // === ОПТИМІЗАЦІЯ (Старі непотрібні методи) ===
     public boolean reduceLag = false;
     public boolean optimizeRendering = false;
     public boolean cullParticles = true;
@@ -81,7 +80,7 @@ public class YACLConfig {
     // === КОЛЬОРИ ===
     public int hudBackgroundColor = 0x000000;
 
-    // FPS кольори
+    // Кольори FPS
     public int fpsGoodColor = 0x55FF55;
     public int fpsMediumColor = 0xFFFF55;
     public int fpsBadColor = 0xFF5555;
@@ -104,7 +103,7 @@ public class YACLConfig {
     public int coordinatesYColor = 0x55FF55;
     public int coordinatesZColor = 0x55FFFF; // ЗМІНЕНО: було 0x5555FF
 
-    // Колір часу (реального)
+    // Колір часу
     public int timeColor = 0xFFFFFF;
     // Колір днів
     public int daysColor = 0xFFFF55;
