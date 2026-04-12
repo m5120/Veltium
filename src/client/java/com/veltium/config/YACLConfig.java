@@ -102,7 +102,7 @@ public class YACLConfig {
     public int coordinatesColor = 0xFFFFFF;
     public int coordinatesXColor = 0xFF5555;
     public int coordinatesYColor = 0x55FF55;
-    public int coordinatesZColor = 0x5555FF;
+    public int coordinatesZColor = 0x55FFFF; // ЗМІНЕНО: було 0x5555FF
 
     // Колір часу (реального)
     public int timeColor = 0xFFFFFF;
@@ -289,6 +289,31 @@ public class YACLConfig {
     public static Screen createConfigScreen(Screen parent) {
         YACLConfig config = getInstance();
 
+        // Зберігаємо опцію hudX як поле, щоб оновлювати її доступність динамічно
+        Option<Integer> hudXOption = Option.<Integer>createBuilder()
+                .name(Component.translatable("text.optimizationmod.option.hud_x"))
+                .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_x.tooltip")))
+                .binding(10, () -> config.hudX, val -> config.hudX = val)
+                .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
+                .available(!config.hudPosition.isCenterX()) // НОВЕ: неактивна якщо CENTER позиція
+                .build();
+
+        // Опція позиції HUD з listener для оновлення hudX
+        Option<HudPosition> hudPositionOption = Option.<HudPosition>createBuilder()
+                .name(Component.translatable("text.optimizationmod.option.hud_position"))
+                .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_position.tooltip")))
+                .binding(HudPosition.TOP_LEFT,
+                        () -> config.hudPosition,
+                        val -> {
+                            config.hudPosition = val;
+                            // НОВЕ: оновлюємо доступність hudX при зміні позиції
+                            hudXOption.setAvailable(!val.isCenterX());
+                        })
+                .controller(opt -> CyclingListControllerBuilder.create(opt)
+                        .values(java.util.Arrays.asList(HudPosition.values()))
+                        .formatValue(pos -> pos.getDisplayName()))
+                .build();
+
         return YetAnotherConfigLib.createBuilder()
                 .title(Component.translatable("text.optimizationmod.config.title"))
 
@@ -407,16 +432,7 @@ public class YACLConfig {
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.5f, 3.0f).step(0.1f))
                                         .build())
 
-                                .option(Option.<HudPosition>createBuilder()
-                                        .name(Component.translatable("text.optimizationmod.option.hud_position"))
-                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_position.tooltip")))
-                                        .binding(HudPosition.TOP_LEFT,
-                                                () -> config.hudPosition,
-                                                val -> config.hudPosition = val)
-                                        .controller(opt -> CyclingListControllerBuilder.create(opt)
-                                                .values(java.util.Arrays.asList(HudPosition.values()))
-                                                .formatValue(pos -> pos.getDisplayName()))
-                                        .build())
+                                .option(hudPositionOption)
 
                                 .option(createBooleanOption(
                                         "text.optimizationmod.option.corner_snap",
@@ -425,12 +441,7 @@ public class YACLConfig {
                                         () -> config.cornerSnap,
                                         val -> config.cornerSnap = val))
 
-                                .option(Option.<Integer>createBuilder()
-                                        .name(Component.translatable("text.optimizationmod.option.hud_x"))
-                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_x.tooltip")))
-                                        .binding(10, () -> config.hudX, val -> config.hudX = val)
-                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
-                                        .build())
+                                .option(hudXOption)
 
                                 .option(Option.<Integer>createBuilder()
                                         .name(Component.translatable("text.optimizationmod.option.hud_y"))
@@ -541,7 +552,7 @@ public class YACLConfig {
                                 .option(createColorOption(
                                         "text.optimizationmod.option.coordinates_z_color",
                                         "text.optimizationmod.option.coordinates_z_color.tooltip",
-                                        0x5555FF,
+                                        0x55FFFF, // ЗМІНЕНО: було 0x5555FF
                                         () -> config.coordinatesZColor,
                                         val -> config.coordinatesZColor = val))
                                 .build())

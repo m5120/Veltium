@@ -3,7 +3,7 @@
 	"id": "veltium-mod",
 	"version": "${version}",
 	"name": "Veltium",
-	"description": "Shows FPS, memory usage, ping, coordinates, real time, and days – HUD mod for Minecraft",
+	"description": "Displays FPS, memory usage, ping, coordinates, real time, in-game time, and day counter — a best customizable HUD mod for Minecraft.",
 	"authors": [
 		"5120"
 	],
