@@ -297,6 +297,10 @@ public class Veltium implements ClientModInitializer {
         if (hudLines.isEmpty()) return;
 
         final int LINE_H = 10;
+        final int BACKGROUND_PADDING_X = 5;
+        final int BACKGROUND_PADDING_TOP = 3;
+        final int BACKGROUND_PADDING_BOTTOM = 3;
+        final int BACKGROUND_CORNER_CUT = 2;
         int totalRawHeight = hudLines.size() * LINE_H;
 
         final int BOTTOM_CENTER_MARGIN = 39;
@@ -304,10 +308,81 @@ public class Veltium implements ClientModInitializer {
         int screenWidth  = client.getWindow().getGuiScaledWidth();
         int screenHeight = client.getWindow().getGuiScaledHeight();
 
+        if (config.hudBackgroundEnabled) {
+            int maxTextWidth = 0;
+            for (ColoredText line : hudLines) {
+                maxTextWidth = Math.max(maxTextWidth, getHudTextWidth(client, line));
+            }
+
+            int backgroundWidth = maxTextWidth + BACKGROUND_PADDING_X * 2;
+            int backgroundHeight = (hudLines.size() - 1) * LINE_H + client.font.lineHeight + BACKGROUND_PADDING_TOP + BACKGROUND_PADDING_BOTTOM;
+
+            int baseX;
+            int baseY;
+
+            if (config.cornerSnap) {
+                baseX = switch (config.hudPosition) {
+                    case TOP_RIGHT, BOTTOM_RIGHT   -> screenWidth - (int)(backgroundWidth * config.hudScale) - 1;
+                    case TOP_CENTER, BOTTOM_CENTER -> (screenWidth - (int)(backgroundWidth * config.hudScale)) / 2;
+                    default                        -> 1;
+                };
+                baseY = switch (config.hudPosition) {
+                    case BOTTOM_LEFT, BOTTOM_RIGHT ->
+                            screenHeight - (int)(backgroundHeight * config.hudScale) - 1;
+                    case BOTTOM_CENTER ->
+                            screenHeight - BOTTOM_CENTER_MARGIN - (int)(backgroundHeight * config.hudScale);
+                    default -> 1;
+                };
+            } else {
+                baseX = switch (config.hudPosition) {
+                    case TOP_RIGHT, BOTTOM_RIGHT   -> Math.max(0, screenWidth - (int)(backgroundWidth * config.hudScale) - config.hudX);
+                    case TOP_CENTER, BOTTOM_CENTER -> (screenWidth - (int)(backgroundWidth * config.hudScale)) / 2;
+                    default                        -> Math.max(0, config.hudX);
+                };
+                baseY = switch (config.hudPosition) {
+                    case BOTTOM_LEFT, BOTTOM_RIGHT ->
+                            Math.max(0, screenHeight - (int)(backgroundHeight * config.hudScale) - config.hudY);
+                    case BOTTOM_CENTER ->
+                            screenHeight - BOTTOM_CENTER_MARGIN - (int)(backgroundHeight * config.hudScale) - config.hudY;
+                    default -> Math.max(0, config.hudY);
+                };
+            }
+
+            baseX = clampToScreen(baseX, screenWidth, (int)(backgroundWidth * config.hudScale));
+            baseY = clampToScreen(baseY, screenHeight, (int)(backgroundHeight * config.hudScale));
+
+            guiGraphics.pose().pushMatrix();
+            guiGraphics.pose().translate((float) baseX, (float) baseY);
+            guiGraphics.pose().scale(config.hudScale, config.hudScale);
+
+            int cornerCut = config.hudBackgroundCorners ? BACKGROUND_CORNER_CUT : 0;
+            renderLineBackground(guiGraphics, backgroundWidth, backgroundHeight, cornerCut);
+
+            for (int i = 0; i < hudLines.size(); i++) {
+                ColoredText line = hudLines.get(i);
+                int textWidth = getHudTextWidth(client, line);
+                int textX = switch (config.hudPosition) {
+                    case TOP_RIGHT, BOTTOM_RIGHT -> BACKGROUND_PADDING_X + maxTextWidth - textWidth;
+                    case TOP_CENTER, BOTTOM_CENTER -> BACKGROUND_PADDING_X + (maxTextWidth - textWidth) / 2;
+                    default -> BACKGROUND_PADDING_X;
+                };
+                int textY = BACKGROUND_PADDING_TOP + i * LINE_H;
+
+                if (config.showCoordinates && config.enableCoordinateColors && line.text.contains("XYZ")) {
+                    renderColoredCoordinates(guiGraphics, client, line.text, textX, textY);
+                } else {
+                    renderTextLine(guiGraphics, client, line.text, textX, textY, line.color, line.strikethrough);
+                }
+            }
+
+            guiGraphics.pose().popMatrix();
+            return;
+        }
+
         for (int i = 0; i < hudLines.size(); i++) {
             ColoredText line = hudLines.get(i);
 
-            int textWidth = client.font.width(line.text);
+            int textWidth = getHudTextWidth(client, line);
 
             int baseX;
             int baseY;
@@ -340,6 +415,9 @@ public class Veltium implements ClientModInitializer {
                 };
             }
 
+            baseX = clampToScreen(baseX, screenWidth, (int)(textWidth * config.hudScale));
+            baseY = clampToScreen(baseY, screenHeight, (int)(LINE_H * config.hudScale));
+
             guiGraphics.pose().pushMatrix();
             guiGraphics.pose().translate((float) baseX, (float) baseY);
             guiGraphics.pose().scale(config.hudScale, config.hudScale);
@@ -352,6 +430,23 @@ public class Veltium implements ClientModInitializer {
 
             guiGraphics.pose().popMatrix();
         }
+    }
+
+    private void renderLineBackground(GuiGraphicsExtractor guiGraphics, int width, int height, int cornerCut) {
+        int alpha = (int)(Math.max(0.0f, Math.min(1.0f, config.hudBackgroundOpacity)) * 255);
+        if (alpha <= 0) return;
+
+        int color = (alpha << 24) | (config.hudBackgroundColor & 0xFFFFFF);
+        int cut = Math.max(0, Math.min(cornerCut, Math.min(width, height) / 2));
+
+        if (cut == 0) {
+            guiGraphics.fill(0, 0, width, height, color);
+            return;
+        }
+
+        guiGraphics.fill(cut, 0, width - cut, cut, color);
+        guiGraphics.fill(0, cut, width, height - cut, color);
+        guiGraphics.fill(cut, height - cut, width - cut, height, color);
     }
 
     private void renderColoredCoordinates(GuiGraphicsExtractor guiGraphics, Minecraft client, String text, int x, int y) {
@@ -421,14 +516,27 @@ public class Veltium implements ClientModInitializer {
     private void renderTextLine(GuiGraphicsExtractor guiGraphics, Minecraft client, String text, int x, int y, int color, boolean strikethrough) {
         if (text == null || text.isEmpty()) return;
 
+        int alpha = (int)(Math.max(0.1f, config.hudTextOpacity) * 255);
+        int finalColor = (alpha << 24) | (color & 0xFFFFFF);
+
+        guiGraphics.text(client.font, createHudText(text, strikethrough), x, y, finalColor, config.hudShadow);
+    }
+
+    private int getHudTextWidth(Minecraft client, ColoredText line) {
+        if (line == null || line.text == null || line.text.isEmpty()) return 0;
+        return client.font.width(createHudText(line.text, line.strikethrough));
+    }
+
+    private int clampToScreen(int position, int screenSize, int elementSize) {
+        return Math.max(0, Math.min(position, Math.max(0, screenSize - elementSize)));
+    }
+
+    private MutableComponent createHudText(String text, boolean strikethrough) {
         MutableComponent mutableText = Component.literal(text);
 
         if (config.hudBold) mutableText = mutableText.withStyle(ChatFormatting.BOLD);
         if (strikethrough) mutableText = mutableText.withStyle(ChatFormatting.STRIKETHROUGH);
 
-        int alpha = (int)(Math.max(0.1f, config.hudTextOpacity) * 255);
-        int finalColor = (alpha << 24) | (color & 0xFFFFFF);
-
-        guiGraphics.text(client.font, mutableText, x, y, finalColor, config.hudShadow);
+        return mutableText;
     }
 }

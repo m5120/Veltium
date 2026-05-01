@@ -15,6 +15,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class YACLConfig {
@@ -75,7 +77,9 @@ public class YACLConfig {
     public boolean hudBold = false;
     public float hudScale = 1.0f;
     public float hudTextOpacity = 1.0f;
-    public float hudBackgroundOpacity = 0.8f;
+    public boolean hudBackgroundEnabled = false;
+    public boolean hudBackgroundCorners = true;
+    public float hudBackgroundOpacity = 0.3f;
 
     // === КОЛЬОРИ ===
     public int hudBackgroundColor = 0x000000;
@@ -262,6 +266,8 @@ public class YACLConfig {
         this.hudBold = other.hudBold;
         this.hudScale = other.hudScale;
         this.hudTextOpacity = other.hudTextOpacity;
+        this.hudBackgroundEnabled = other.hudBackgroundEnabled;
+        this.hudBackgroundCorners = other.hudBackgroundCorners;
         this.hudBackgroundOpacity = other.hudBackgroundOpacity;
         this.hudBackgroundColor = other.hudBackgroundColor;
         this.fpsGoodColor = other.fpsGoodColor;
@@ -287,14 +293,16 @@ public class YACLConfig {
 
     public static Screen createConfigScreen(Screen parent) {
         YACLConfig config = getInstance();
+        List<Option<?>> modDependentOptions = new ArrayList<>();
+        Runnable[] updateModDependentOptions = new Runnable[1];
 
         // Зберігаємо опцію hudX як поле, щоб оновлювати її доступність динамічно
         Option<Integer> hudXOption = Option.<Integer>createBuilder()
                 .name(Component.translatable("text.optimizationmod.option.hud_x"))
                 .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_x.tooltip")))
                 .binding(10, () -> config.hudX, val -> config.hudX = val)
-                .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
-                .available(!config.hudPosition.isCenterX()) // НОВЕ: неактивна якщо CENTER позиція
+                .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 320).step(1))
+                .available(config.modEnabled && !config.hudPosition.isCenterX()) // НОВЕ: неактивна якщо CENTER позиція
                 .build();
 
         // Опція позиції HUD з listener для оновлення hudX
@@ -306,12 +314,19 @@ public class YACLConfig {
                         val -> {
                             config.hudPosition = val;
                             // НОВЕ: оновлюємо доступність hudX при зміні позиції
-                            hudXOption.setAvailable(!val.isCenterX());
+                            if (updateModDependentOptions[0] != null) updateModDependentOptions[0].run();
                         })
                 .controller(opt -> CyclingListControllerBuilder.create(opt)
                         .values(java.util.Arrays.asList(HudPosition.values()))
                         .formatValue(pos -> pos.getDisplayName()))
                 .build();
+
+        updateModDependentOptions[0] = () -> {
+            for (Option<?> option : modDependentOptions) {
+                option.setAvailable(config.modEnabled);
+            }
+            hudXOption.setAvailable(config.modEnabled && !config.hudPosition.isCenterX());
+        };
 
         return YetAnotherConfigLib.createBuilder()
                 .title(Component.translatable("text.optimizationmod.config.title"))
@@ -329,68 +344,71 @@ public class YACLConfig {
                                         "text.optimizationmod.option.mod_enabled.tooltip",
                                         true,
                                         () -> config.modEnabled,
-                                        val -> config.modEnabled = val))
+                                        val -> {
+                                            config.modEnabled = val;
+                                            updateModDependentOptions[0].run();
+                                        }))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_notifications",
                                         "text.optimizationmod.option.show_notifications.tooltip",
                                         true,
                                         () -> config.showNotifications,
-                                        val -> config.showNotifications = val))
+                                        val -> config.showNotifications = val), config.modEnabled))
                                 .build())
 
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.hud_elements"))
                                 .collapsed(false)
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_fps",
                                         "text.optimizationmod.option.show_fps.tooltip",
                                         true,
                                         () -> config.showFpsCounter,
-                                        val -> config.showFpsCounter = val))
+                                        val -> config.showFpsCounter = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_memory",
                                         "text.optimizationmod.option.show_memory.tooltip",
                                         false,
                                         () -> config.showMemoryUsage,
-                                        val -> config.showMemoryUsage = val))
+                                        val -> config.showMemoryUsage = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_ping",
                                         "text.optimizationmod.option.show_ping.tooltip",
                                         false,
                                         () -> config.showPing,
-                                        val -> config.showPing = val))
+                                        val -> config.showPing = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_coordinates",
                                         "text.optimizationmod.option.show_coordinates.tooltip",
                                         true,
                                         () -> config.showCoordinates,
-                                        val -> config.showCoordinates = val))
+                                        val -> config.showCoordinates = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_time",
                                         "text.optimizationmod.option.show_time.tooltip",
                                         false,
                                         () -> config.showTime,
-                                        val -> config.showTime = val))
+                                        val -> config.showTime = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_days",
                                         "text.optimizationmod.option.show_days.tooltip",
                                         false,
                                         () -> config.showDays,
-                                        val -> config.showDays = val))
+                                        val -> config.showDays = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_world_time",
                                         "text.optimizationmod.option.show_world_time.tooltip",
                                         false,
                                         () -> config.showWorldTime,
-                                        val -> config.showWorldTime = val))
+                                        val -> config.showWorldTime = val), config.modEnabled))
 
                                 .build())
 
@@ -398,173 +416,212 @@ public class YACLConfig {
                                 .name(Component.translatable("text.optimizationmod.separator.advanced_stats"))
                                 .collapsed(false)
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_advanced_fps",
                                         "text.optimizationmod.option.show_advanced_fps.tooltip",
                                         false,
                                         () -> config.showAdvancedFps,
-                                        val -> config.showAdvancedFps = val))
+                                        val -> config.showAdvancedFps = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_advanced_memory",
                                         "text.optimizationmod.option.show_advanced_memory.tooltip",
                                         false,
                                         () -> config.showAdvancedMemory,
-                                        val -> config.showAdvancedMemory = val))
+                                        val -> config.showAdvancedMemory = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.show_advanced_ping",
                                         "text.optimizationmod.option.show_advanced_ping.tooltip",
                                         false,
                                         () -> config.showAdvancedPing,
-                                        val -> config.showAdvancedPing = val))
+                                        val -> config.showAdvancedPing = val), config.modEnabled))
                                 .build())
 
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.size_position"))
                                 .collapsed(false)
 
-                                .option(Option.<Float>createBuilder()
+                                .option(track(modDependentOptions, Option.<Float>createBuilder()
                                         .name(Component.translatable("text.optimizationmod.option.hud_scale"))
                                         .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_scale.tooltip")))
                                         .binding(1.0f, () -> config.hudScale, val -> config.hudScale = val)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.5f, 3.0f).step(0.1f))
-                                        .build())
+                                        .build(), config.modEnabled))
 
-                                .option(hudPositionOption)
+                                .option(track(modDependentOptions, hudPositionOption, config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.corner_snap",
                                         "text.optimizationmod.option.corner_snap.tooltip",
                                         false,
                                         () -> config.cornerSnap,
-                                        val -> config.cornerSnap = val))
+                                        val -> config.cornerSnap = val), config.modEnabled))
 
                                 .option(hudXOption)
 
-                                .option(Option.<Integer>createBuilder()
+                                .option(track(modDependentOptions, Option.<Integer>createBuilder()
                                         .name(Component.translatable("text.optimizationmod.option.hud_y"))
                                         .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_y.tooltip")))
                                         .binding(10, () -> config.hudY, val -> config.hudY = val)
-                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 500).step(1))
-                                        .build())
+                                        .controller(opt -> IntegerSliderControllerBuilder.create(opt).range(0, 240).step(1))
+                                        .build(), config.modEnabled))
                                 .build())
 
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.text_appearance"))
                                 .collapsed(false)
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.hud_shadow",
                                         "text.optimizationmod.option.hud_shadow.tooltip",
                                         true,
                                         () -> config.hudShadow,
-                                        val -> config.hudShadow = val))
+                                        val -> config.hudShadow = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.hud_bold",
                                         "text.optimizationmod.option.hud_bold.tooltip",
                                         false,
                                         () -> config.hudBold,
-                                        val -> config.hudBold = val))
+                                        val -> config.hudBold = val), config.modEnabled))
 
-                                .option(Option.<Float>createBuilder()
+                                .option(track(modDependentOptions, Option.<Float>createBuilder()
                                         .name(Component.translatable("text.optimizationmod.option.hud_text_opacity"))
                                         .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_text_opacity.tooltip")))
                                         .binding(1.0f, () -> config.hudTextOpacity, val -> config.hudTextOpacity = val)
                                         .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.3f, 1.0f).step(0.1f))
-                                        .build())
+                                        .build(), config.modEnabled))
+                                .build())
+
+                        .group(OptionGroup.createBuilder()
+                                .name(Component.translatable("text.optimizationmod.separator.background"))
+                                .collapsed(false)
+
+                                .option(track(modDependentOptions, createBooleanOption(
+                                        "text.optimizationmod.option.hud_background_enabled",
+                                        "text.optimizationmod.option.hud_background_enabled.tooltip",
+                                        false,
+                                        () -> config.hudBackgroundEnabled,
+                                        val -> config.hudBackgroundEnabled = val), config.modEnabled))
+
+                                .option(track(modDependentOptions, createBooleanOption(
+                                        "text.optimizationmod.option.hud_background_corners",
+                                        "text.optimizationmod.option.hud_background_corners.tooltip",
+                                        true,
+                                        () -> config.hudBackgroundCorners,
+                                        val -> config.hudBackgroundCorners = val), config.modEnabled))
+
+                                .option(track(modDependentOptions, Option.<Color>createBuilder()
+                                        .name(Component.translatable("text.optimizationmod.option.hud_background_color"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_background_color.tooltip")))
+                                        .binding(intToColor(0x000000), () -> intToColor(config.hudBackgroundColor), val -> config.hudBackgroundColor = colorToInt(val))
+                                        .controller(ColorControllerBuilder::create)
+                                        .build(), config.modEnabled))
+
+                                .option(track(modDependentOptions, Option.<Float>createBuilder()
+                                        .name(Component.translatable("text.optimizationmod.option.hud_background_opacity"))
+                                        .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.hud_background_opacity.tooltip")))
+                                        .binding(0.3f, () -> config.hudBackgroundOpacity, val -> config.hudBackgroundOpacity = val)
+                                        .controller(opt -> FloatSliderControllerBuilder.create(opt).range(0.1f, 1.0f).step(0.1f))
+                                        .build(), config.modEnabled))
                                 .build())
 
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.colors"))
                                 .collapsed(false)
 
-                                .option(Option.<Color>createBuilder()
+                                .option(track(modDependentOptions, Option.<Color>createBuilder()
                                         .name(Component.translatable("text.optimizationmod.option.coordinates_color"))
                                         .description(OptionDescription.of(Component.translatable("text.optimizationmod.option.coordinates_color.tooltip")))
                                         .binding(intToColor(0xFFFFFF), () -> intToColor(config.coordinatesColor), val -> config.coordinatesColor = colorToInt(val))
                                         .controller(ColorControllerBuilder::create)
-                                        .build())
+                                        .build(), config.modEnabled))
 
-                                .option(createColorOption(
+                                .option(track(modDependentOptions, createColorOption(
                                         "text.optimizationmod.option.time_color",
                                         "text.optimizationmod.option.time_color.tooltip",
                                         0xFFFFFF,
                                         () -> config.timeColor,
-                                        val -> config.timeColor = val))
+                                        val -> config.timeColor = val), config.modEnabled))
 
-                                .option(createColorOption(
+                                .option(track(modDependentOptions, createColorOption(
                                         "text.optimizationmod.option.days_color",
                                         "text.optimizationmod.option.days_color.tooltip",
                                         0xFFFF55,
                                         () -> config.daysColor,
-                                        val -> config.daysColor = val))
+                                        val -> config.daysColor = val), config.modEnabled))
 
-                                .option(createColorOption(
+                                .option(track(modDependentOptions, createColorOption(
                                         "text.optimizationmod.option.day_color",
                                         "text.optimizationmod.option.day_color.tooltip",
                                         0x55FF55,
                                         () -> config.dayColor,
-                                        val -> config.dayColor = val))
+                                        val -> config.dayColor = val), config.modEnabled))
 
-                                .option(createColorOption(
+                                .option(track(modDependentOptions, createColorOption(
                                         "text.optimizationmod.option.night_color",
                                         "text.optimizationmod.option.night_color.tooltip",
                                         0x5555FF,
                                         () -> config.nightColor,
-                                        val -> config.nightColor = val))
+                                        val -> config.nightColor = val), config.modEnabled))
                                 .build())
 
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.category.coordinate_settings"))
                                 .collapsed(false)
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.enable_coordinate_colors",
                                         "text.optimizationmod.option.enable_coordinate_colors.tooltip",
                                         false,
                                         () -> config.enableCoordinateColors,
-                                        val -> config.enableCoordinateColors = val))
+                                        val -> config.enableCoordinateColors = val), config.modEnabled))
 
-                                .option(createBooleanOption(
+                                .option(track(modDependentOptions, createBooleanOption(
                                         "text.optimizationmod.option.coordinates_show_decimals",
                                         "text.optimizationmod.option.coordinates_show_decimals.tooltip",
                                         true,
                                         () -> config.coordinatesShowDecimals,
-                                        val -> config.coordinatesShowDecimals = val))
+                                        val -> config.coordinatesShowDecimals = val), config.modEnabled))
 
-                                .option(createColorOption(
+                                .option(track(modDependentOptions, createColorOption(
                                         "text.optimizationmod.option.coordinates_x_color",
                                         "text.optimizationmod.option.coordinates_x_color.tooltip",
                                         0xFF5555,
                                         () -> config.coordinatesXColor,
-                                        val -> config.coordinatesXColor = val))
+                                        val -> config.coordinatesXColor = val), config.modEnabled))
 
-                                .option(createColorOption(
+                                .option(track(modDependentOptions, createColorOption(
                                         "text.optimizationmod.option.coordinates_y_color",
                                         "text.optimizationmod.option.coordinates_y_color.tooltip",
                                         0x55FF55,
                                         () -> config.coordinatesYColor,
-                                        val -> config.coordinatesYColor = val))
+                                        val -> config.coordinatesYColor = val), config.modEnabled))
 
-                                .option(createColorOption(
+                                .option(track(modDependentOptions, createColorOption(
                                         "text.optimizationmod.option.coordinates_z_color",
                                         "text.optimizationmod.option.coordinates_z_color.tooltip",
                                         0x55FFFF, // ЗМІНЕНО: було 0x5555FF
                                         () -> config.coordinatesZColor,
-                                        val -> config.coordinatesZColor = val))
+                                        val -> config.coordinatesZColor = val), config.modEnabled))
                                 .build())
 
-                        .group(createFpsColorGroup(config))
-                        .group(createMemoryColorGroup(config))
-                        .group(createPingColorGroup(config))
+                        .group(createFpsColorGroup(config, modDependentOptions))
+                        .group(createMemoryColorGroup(config, modDependentOptions))
+                        .group(createPingColorGroup(config, modDependentOptions))
 
                         .build())
 
                 .save(config::save)
                 .build()
                 .generateScreen(parent);
+    }
+
+    private static <T> Option<T> track(List<Option<?>> options, Option<T> option, boolean available) {
+        option.setAvailable(available);
+        options.add(option);
+        return option;
     }
 
     private static Option<Boolean> createBooleanOption(String nameKey, String tooltipKey,
@@ -594,78 +651,78 @@ public class YACLConfig {
                 .build();
     }
 
-    private static OptionGroup createFpsColorGroup(YACLConfig config) {
+    private static OptionGroup createFpsColorGroup(YACLConfig config, List<Option<?>> modDependentOptions) {
         return OptionGroup.createBuilder()
                 .name(Component.translatable("text.optimizationmod.category.fps_colors"))
                 .collapsed(false)
-                .option(createColorOption(
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.fps_good_color",
                         "text.optimizationmod.option.fps_good_color.tooltip",
                         0x55FF55,
                         () -> config.fpsGoodColor,
-                        val -> config.fpsGoodColor = val))
-                .option(createColorOption(
+                        val -> config.fpsGoodColor = val), config.modEnabled))
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.fps_medium_color",
                         "text.optimizationmod.option.fps_medium_color.tooltip",
                         0xFFFF55,
                         () -> config.fpsMediumColor,
-                        val -> config.fpsMediumColor = val))
-                .option(createColorOption(
+                        val -> config.fpsMediumColor = val), config.modEnabled))
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.fps_bad_color",
                         "text.optimizationmod.option.fps_bad_color.tooltip",
                         0xFF5555,
                         () -> config.fpsBadColor,
-                        val -> config.fpsBadColor = val))
+                        val -> config.fpsBadColor = val), config.modEnabled))
                 .build();
     }
 
-    private static OptionGroup createMemoryColorGroup(YACLConfig config) {
+    private static OptionGroup createMemoryColorGroup(YACLConfig config, List<Option<?>> modDependentOptions) {
         return OptionGroup.createBuilder()
                 .name(Component.translatable("text.optimizationmod.category.memory_colors"))
                 .collapsed(false)
-                .option(createColorOption(
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.memory_good_color",
                         "text.optimizationmod.option.memory_good_color.tooltip",
                         0x55FF55,
                         () -> config.memoryGoodColor,
-                        val -> config.memoryGoodColor = val))
-                .option(createColorOption(
+                        val -> config.memoryGoodColor = val), config.modEnabled))
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.memory_medium_color",
                         "text.optimizationmod.option.memory_medium_color.tooltip",
                         0xFFFF55,
                         () -> config.memoryMediumColor,
-                        val -> config.memoryMediumColor = val))
-                .option(createColorOption(
+                        val -> config.memoryMediumColor = val), config.modEnabled))
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.memory_bad_color",
                         "text.optimizationmod.option.memory_bad_color.tooltip",
                         0xFF5555,
                         () -> config.memoryBadColor,
-                        val -> config.memoryBadColor = val))
+                        val -> config.memoryBadColor = val), config.modEnabled))
                 .build();
     }
 
-    private static OptionGroup createPingColorGroup(YACLConfig config) {
+    private static OptionGroup createPingColorGroup(YACLConfig config, List<Option<?>> modDependentOptions) {
         return OptionGroup.createBuilder()
                 .name(Component.translatable("text.optimizationmod.category.ping_colors"))
                 .collapsed(false)
-                .option(createColorOption(
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.ping_good_color",
                         "text.optimizationmod.option.ping_good_color.tooltip",
                         0x55FF55,
                         () -> config.pingGoodColor,
-                        val -> config.pingGoodColor = val))
-                .option(createColorOption(
+                        val -> config.pingGoodColor = val), config.modEnabled))
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.ping_medium_color",
                         "text.optimizationmod.option.ping_medium_color.tooltip",
                         0xFFFF55,
                         () -> config.pingMediumColor,
-                        val -> config.pingMediumColor = val))
-                .option(createColorOption(
+                        val -> config.pingMediumColor = val), config.modEnabled))
+                .option(track(modDependentOptions, createColorOption(
                         "text.optimizationmod.option.ping_bad_color",
                         "text.optimizationmod.option.ping_bad_color.tooltip",
                         0xFF5555,
                         () -> config.pingBadColor,
-                        val -> config.pingBadColor = val))
+                        val -> config.pingBadColor = val), config.modEnabled))
                 .build();
     }
 }
