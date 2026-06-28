@@ -77,12 +77,12 @@ public class Veltium implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!messageSent && client.player != null && config.modEnabled && config.showNotifications) {
-                client.gui.getChat().addClientSystemMessage(Component.translatable("text.optimizationmod.message.loaded"));
+                client.gui.hud.getChat().addClientSystemMessage(Component.translatable("text.optimizationmod.message.loaded"));
                 messageSent = true;
             }
 
             while (configKeyMapping.consumeClick()) {
-                client.setScreen(YACLConfig.createConfigScreen(client.screen));
+                client.gui.setScreen(YACLConfig.createConfigScreen(client.gui.screen));
             }
 
             applyOptimizations(client);
@@ -128,7 +128,7 @@ public class Veltium implements ClientModInitializer {
         if (!config.modEnabled
                 || client.player == null
                 || client.getDebugOverlay().showDebugScreen()
-                || client.options.hideGui) return;
+                || client.gui.hud.isHidden() return;
 
         long currentTime = System.currentTimeMillis();
 
