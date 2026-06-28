@@ -82,7 +82,7 @@ public class Veltium implements ClientModInitializer {
             }
 
             while (configKeyMapping.consumeClick()) {
-                client.gui.setScreen(YACLConfig.createConfigScreen(client.gui.screen));
+                client.gui.setScreen(YACLConfig.createConfigScreen(client.gui.getScreen()));
             }
 
             applyOptimizations(client);
