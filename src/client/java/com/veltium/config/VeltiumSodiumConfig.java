@@ -235,7 +235,7 @@ public class VeltiumSodiumConfig implements ConfigEntryPoint {
 
         ExternalPageBuilder advancedPage = builder.createExternalPage()
                 .setName(Component.translatable("text.veltium.sodium.page.advanced"))
-                .setScreenConsumer((Screen screen) -> Minecraft.getInstance().setScreen(YACLConfig.createConfigScreen(screen)));
+                .setScreenConsumer((Screen screen) -> Minecraft.getInstance().gui.setScreen(YACLConfig.createConfigScreen(screen)));
 
         builder.registerOwnModOptions()
                 .setIcon(Identifier.parse("template-mod:icon.png"))
