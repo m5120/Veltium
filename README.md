@@ -1,5 +1,8 @@
 # Not Enough HUD Veltium 
 
+[![Build](https://github.com/PiBOH/Veltium/actions/workflows/build.yml/badge.svg)](https://github.com/PiBOH/Veltium/actions/workflows/build.yml)
+[![Release](https://github.com/PiBOH/Veltium/actions/workflows/release.yml/badge.svg)](https://github.com/PiBOH/Veltium/actions/workflows/release.yml)
+
 ## Main Features
 
 **New HUD** with clean and readable design
