@@ -20,16 +20,13 @@ jobs:
           java-version: '25'
           distribution: 'temurin'
 
-      - name: Setup Gradle
+      - name: Setup Gradle 9.5.1
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '9.5.1'
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
       - name: Build with Gradle
-        run: ./gradlew build
+        run: gradle build
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
