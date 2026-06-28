@@ -128,7 +128,7 @@ public class Veltium implements ClientModInitializer {
         if (!config.modEnabled
                 || client.player == null
                 || client.getDebugOverlay().showDebugScreen()
-                || client.gui.hud.isHidden() return;
+                || client.gui.hud.isHidden()) return;
 
         long currentTime = System.currentTimeMillis();
 
