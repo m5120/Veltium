@@ -39,7 +39,7 @@ dependencies {
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	implementation ("dev.isxander:yet-another-config-lib:${project.yacl_version}") {
+	implementation ("maven.modrinth:1eAoo2KR:${project.yacl_version}") {
 		exclude group: "com.twelvemonkeys.imageio"
 	}
 
