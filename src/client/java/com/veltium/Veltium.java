@@ -28,7 +28,6 @@ public class Veltium implements ClientModInitializer {
     private static KeyMapping configKeyMapping;
 
     private long lastHudUpdate = 0;
-    private long lastGC = 0;
     private String cachedTime = "";
     private long cachedDays = 0;
     private int cachedPing = 0;
@@ -71,21 +70,19 @@ public class Veltium implements ClientModInitializer {
 
         configKeyMapping = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.optimizationmod.config",
-                GLFW.GLFW_KEY_O,
+                GLFW.GLFW_KEY_I,
                 KeyMapping.Category.MISC
         ));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!messageSent && client.player != null && config.modEnabled && config.showNotifications) {
-                client.gui.getChat().addClientSystemMessage(Component.translatable("text.optimizationmod.message.loaded"));
+                client.gui.hud.getChat().addClientSystemMessage(Component.translatable("text.optimizationmod.message.loaded"));
                 messageSent = true;
             }
 
             while (configKeyMapping.consumeClick()) {
-                client.setScreen(YACLConfig.createConfigScreen(client.screen));
+                client.gui.setScreen(YACLConfig.createConfigScreen(client.gui.screen()));
             }
-
-            applyOptimizations(client);
         });
 
         HudElementRegistry.attachElementAfter(
@@ -97,38 +94,13 @@ public class Veltium implements ClientModInitializer {
         System.out.println("Veltium, maybe it works");
     }
 
-    private void applyOptimizations(Minecraft client) {
-        if (!config.modEnabled || config.optimizationLevel == 0 || client.options == null) return;
-
-        long currentTime = System.currentTimeMillis();
-
-        if (config.optimizationLevel >= 2) {
-            client.options.bobView().set(false);
-            client.options.entityShadows().set(false);
-        }
-
-        if (config.optimizationLevel >= 3) {
-            client.options.cloudStatus().set(net.minecraft.client.CloudStatus.OFF);
-            client.options.particles().set(net.minecraft.server.level.ParticleStatus.DECREASED);
-        }
-
-        if (config.reduceLag && currentTime - lastGC > 30000) {
-            Runtime runtime = Runtime.getRuntime();
-            long usedMemory = runtime.totalMemory() - runtime.freeMemory();
-            if (usedMemory > runtime.maxMemory() * 0.8) {
-                System.gc();
-                lastGC = currentTime;
-            }
-        }
-    }
-
     private void renderHud(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker) {
         Minecraft client = Minecraft.getInstance();
 
         if (!config.modEnabled
                 || client.player == null
                 || client.getDebugOverlay().showDebugScreen()
-                || client.options.hideGui) return;
+                || client.gui.hud.isHidden()) return;
 
         long currentTime = System.currentTimeMillis();
 

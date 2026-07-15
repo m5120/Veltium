@@ -159,7 +159,7 @@
   "text.optimizationmod.option.optimize_chunks": "Оптимізувати чанки",
   "text.optimizationmod.option.optimize_chunks.tooltip": "Покращує завантаження та рендеринг чанків",
 
-  "text.optimizationmod.message.loaded": "§a[Veltium] §fМод завантажено! Натисни клавішу O(En) для налаштувань",
+  "text.optimizationmod.message.loaded": "§a[Veltium] §fМод завантажено! Натисни клавішу I(En) для налаштувань",
   "text.optimizationmod.message.saved": "§a[Veltium] §fНалаштування збережено!",
 
   "text.optimizationmod.option.hud_position": "Позиція HUD",
@@ -268,5 +268,11 @@
   "text.optimizationmod.option.hud_background_color": "Колір фону",
   "text.optimizationmod.option.hud_background_color.tooltip": "Базовий колір фону HUD.",
   "text.optimizationmod.option.hud_background_opacity": "Прозорість фону",
-  "text.optimizationmod.option.hud_background_opacity.tooltip": "Керує тим, наскільки прозорим буде фон HUD."
+  "text.optimizationmod.option.hud_background_opacity.tooltip": "Керує тим, наскільки прозорим буде фон HUD.",
+  "text.optimizationmod.category.main": "Основні",
+  "text.optimizationmod.category.main.tooltip": "Головні налаштування HUD",
+  "text.optimizationmod.category.personalization": "Персоналізація",
+  "text.optimizationmod.category.personalization.tooltip": "Розмір, позиція, шрифт та фон HUD",
+  "text.optimizationmod.category.colors_tab": "Кольори",
+  "text.optimizationmod.category.colors_tab.tooltip": "Кольори тексту та індикаторів"
 }

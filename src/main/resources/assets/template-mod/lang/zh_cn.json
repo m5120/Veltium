@@ -159,7 +159,7 @@
   "text.optimizationmod.option.optimize_chunks": "优化区块",
   "text.optimizationmod.option.optimize_chunks.tooltip": "改进区块加载和渲染",
 
-  "text.optimizationmod.message.loaded": "§a[Veltium] §f模组已加载！按键打开设置",
+  "text.optimizationmod.message.loaded": "§a[Veltium] §f模组已加载！按 I 键打开设置",
   "text.optimizationmod.message.saved": "§a[Veltium] §f设置已保存！",
 
   "text.optimizationmod.option.hud_position": "HUD 位置",
@@ -265,5 +265,11 @@
   "text.optimizationmod.option.hud_background_color": "背景颜色",
   "text.optimizationmod.option.hud_background_color.tooltip": "HUD 背景的基础颜色。",
   "text.optimizationmod.option.hud_background_opacity": "背景不透明度",
-  "text.optimizationmod.option.hud_background_opacity.tooltip": "控制 HUD 背景的透明程度。"
+  "text.optimizationmod.option.hud_background_opacity.tooltip": "控制 HUD 背景的透明程度。",
+  "text.optimizationmod.category.main": "主要",
+  "text.optimizationmod.category.main.tooltip": "主要开关和 HUD 元素",
+  "text.optimizationmod.category.personalization": "个性化",
+  "text.optimizationmod.category.personalization.tooltip": "HUD 大小、位置、字体和背景",
+  "text.optimizationmod.category.colors_tab": "颜色",
+  "text.optimizationmod.category.colors_tab.tooltip": "文本和指示器颜色"
 }

@@ -37,19 +37,6 @@ public class YACLConfig {
     public boolean showNotifications = true;
     public boolean cornerSnap = false;
 
-    public int optimizationLevel = 0;
-    public int maxParticles = 100;
-
-    // === ОПТИМІЗАЦІЯ (Старі непотрібні методи) ===
-    public boolean reduceLag = false;
-    public boolean optimizeRendering = false;
-    public boolean cullParticles = true;
-    public boolean enableEntityCulling = false;
-    public boolean optimizeChunks = false;
-    public boolean fastMath = false;
-    public boolean smartMemoryManagement = false;
-    public int tickOptimizationLevel = 1;
-
     // === ЕЛЕМЕНТИ HUD ===
     public boolean showFpsCounter = true;
     public boolean showMemoryUsage = false;
@@ -176,31 +163,6 @@ public class YACLConfig {
         return pingBadColor;
     }
 
-    public boolean shouldReduceLag() {
-        return modEnabled && reduceLag && optimizationLevel > 0;
-    }
-
-    public boolean shouldCullEntities() {
-        return modEnabled && enableEntityCulling && optimizationLevel > 0;
-    }
-
-    public boolean shouldOptimizeChunks() {
-        return modEnabled && optimizeChunks && optimizationLevel > 0;
-    }
-
-    public int getEffectiveParticleLimit() {
-        if (!modEnabled || optimizationLevel == 0) return maxParticles;
-
-        float multiplier = switch (optimizationLevel) {
-            case 1 -> 0.9f;
-            case 2 -> 0.7f;
-            case 3 -> 0.5f;
-            default -> 1.0f;
-        };
-
-        return (int) (maxParticles * multiplier);
-    }
-
     public void load() {
         try {
             if (Files.exists(CONFIG_PATH)) {
@@ -238,16 +200,6 @@ public class YACLConfig {
         this.modEnabled = other.modEnabled;
         this.showNotifications = other.showNotifications;
         this.cornerSnap = other.cornerSnap;
-        this.optimizationLevel = other.optimizationLevel;
-        this.maxParticles = other.maxParticles;
-        this.reduceLag = other.reduceLag;
-        this.optimizeRendering = other.optimizeRendering;
-        this.cullParticles = other.cullParticles;
-        this.enableEntityCulling = other.enableEntityCulling;
-        this.optimizeChunks = other.optimizeChunks;
-        this.fastMath = other.fastMath;
-        this.smartMemoryManagement = other.smartMemoryManagement;
-        this.tickOptimizationLevel = other.tickOptimizationLevel;
         this.showFpsCounter = other.showFpsCounter;
         this.showMemoryUsage = other.showMemoryUsage;
         this.showPing = other.showPing;
@@ -331,10 +283,12 @@ public class YACLConfig {
         return YetAnotherConfigLib.createBuilder()
                 .title(Component.translatable("text.optimizationmod.config.title"))
 
+                // ==================== ВКЛАДКА 1: ОСНОВНІ НАЛАШТУВАННЯ ====================
                 .category(ConfigCategory.createBuilder()
-                        .name(Component.translatable("text.optimizationmod.category.hud"))
-                        .tooltip(Component.translatable("text.optimizationmod.category.hud.tooltip"))
+                        .name(Component.translatable("text.optimizationmod.category.main"))
+                        .tooltip(Component.translatable("text.optimizationmod.category.main.tooltip"))
 
+                        // Основні налаштування — завжди розгорнуто, це найважливіші перемикачі
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.main_settings"))
                                 .collapsed(false)
@@ -357,6 +311,7 @@ public class YACLConfig {
                                         val -> config.showNotifications = val), config.modEnabled))
                                 .build())
 
+                        // Елементи HUD — теж розгорнуто, це основний вибір того, що показувати
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.hud_elements"))
                                 .collapsed(false)
@@ -412,6 +367,7 @@ public class YACLConfig {
 
                                 .build())
 
+                        // Розширена статистика — розгорнуто за замовчуванням
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.advanced_stats"))
                                 .collapsed(false)
@@ -438,6 +394,14 @@ public class YACLConfig {
                                         val -> config.showAdvancedPing = val), config.modEnabled))
                                 .build())
 
+                        .build())
+
+                // ==================== ВКЛАДКА 2: ПЕРСОНАЛІЗАЦІЯ ====================
+                .category(ConfigCategory.createBuilder()
+                        .name(Component.translatable("text.optimizationmod.category.personalization"))
+                        .tooltip(Component.translatable("text.optimizationmod.category.personalization.tooltip"))
+
+                        // Розмір і позиція
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.size_position"))
                                 .collapsed(false)
@@ -468,6 +432,7 @@ public class YACLConfig {
                                         .build(), config.modEnabled))
                                 .build())
 
+                        // Зовнішній вигляд тексту
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.text_appearance"))
                                 .collapsed(false)
@@ -494,6 +459,7 @@ public class YACLConfig {
                                         .build(), config.modEnabled))
                                 .build())
 
+                        // Фон HUD
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.background"))
                                 .collapsed(false)
@@ -527,6 +493,14 @@ public class YACLConfig {
                                         .build(), config.modEnabled))
                                 .build())
 
+                        .build())
+
+                // ==================== ВКЛАДКА 3: КОЛЬОРИ ====================
+                .category(ConfigCategory.createBuilder()
+                        .name(Component.translatable("text.optimizationmod.category.colors_tab"))
+                        .tooltip(Component.translatable("text.optimizationmod.category.colors_tab.tooltip"))
+
+                        // Загальні кольори
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.separator.colors"))
                                 .collapsed(false)
@@ -567,6 +541,7 @@ public class YACLConfig {
                                         val -> config.nightColor = val), config.modEnabled))
                                 .build())
 
+                        // Налаштування кольорів координат
                         .group(OptionGroup.createBuilder()
                                 .name(Component.translatable("text.optimizationmod.category.coordinate_settings"))
                                 .collapsed(false)
@@ -651,6 +626,7 @@ public class YACLConfig {
                 .build();
     }
 
+    // Групи кольорів FPS/пам'яті/пінгу — розгорнуті за замовчуванням
     private static OptionGroup createFpsColorGroup(YACLConfig config, List<Option<?>> modDependentOptions) {
         return OptionGroup.createBuilder()
                 .name(Component.translatable("text.optimizationmod.category.fps_colors"))

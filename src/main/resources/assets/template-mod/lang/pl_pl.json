@@ -159,7 +159,7 @@
   "text.optimizationmod.option.optimize_chunks": "Optymalizuj chunki",
   "text.optimizationmod.option.optimize_chunks.tooltip": "Poprawia ładowanie i renderowanie chunków",
 
-  "text.optimizationmod.message.loaded": "§a[Veltium] §fMod załadowany! Naciśnij klawisz O(En) dla ustawień",
+  "text.optimizationmod.message.loaded": "§a[Veltium] §fMod załadowany! Naciśnij klawisz I(En) dla ustawień",
   "text.optimizationmod.message.saved": "§a[Veltium] §fUstawienia zapisane!",
 
   "text.optimizationmod.option.hud_position": "Pozycja HUD",
@@ -265,5 +265,11 @@
   "text.optimizationmod.option.hud_background_color": "Kolor tła",
   "text.optimizationmod.option.hud_background_color.tooltip": "Bazowy kolor tła HUD.",
   "text.optimizationmod.option.hud_background_opacity": "Przezroczystość tła",
-  "text.optimizationmod.option.hud_background_opacity.tooltip": "Określa, jak przezroczyste ma być tło HUD."
+  "text.optimizationmod.option.hud_background_opacity.tooltip": "Określa, jak przezroczyste ma być tło HUD.",
+  "text.optimizationmod.category.main": "Główne",
+  "text.optimizationmod.category.main.tooltip": "Główne przełączniki i elementy HUD",
+  "text.optimizationmod.category.personalization": "Personalizacja",
+  "text.optimizationmod.category.personalization.tooltip": "Rozmiar, pozycja, czcionka i tło HUD",
+  "text.optimizationmod.category.colors_tab": "Kolory",
+  "text.optimizationmod.category.colors_tab.tooltip": "Kolory tekstu i wskaźników"
 }

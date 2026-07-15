@@ -159,7 +159,7 @@
   "text.optimizationmod.option.optimize_chunks": "Optimize Chunks",
   "text.optimizationmod.option.optimize_chunks.tooltip": "Improves chunk loading and rendering",
 
-  "text.optimizationmod.message.loaded": "§a[Veltium] §fMod loaded! Press key O for settings",
+  "text.optimizationmod.message.loaded": "§a[Veltium] §fMod loaded! Press key I for settings",
   "text.optimizationmod.message.saved": "§a[Veltium] §fSettings saved!",
 
   "text.optimizationmod.option.hud_position": "HUD Position",
@@ -268,5 +268,11 @@
   "text.optimizationmod.option.hud_background_color": "Background Color",
   "text.optimizationmod.option.hud_background_color.tooltip": "Base color for the HUD background.",
   "text.optimizationmod.option.hud_background_opacity": "Background Opacity",
-  "text.optimizationmod.option.hud_background_opacity.tooltip": "Controls how transparent the HUD background is."
+  "text.optimizationmod.option.hud_background_opacity.tooltip": "Controls how transparent the HUD background is.",
+  "text.optimizationmod.category.main": "Main",
+  "text.optimizationmod.category.main.tooltip": "Main toggles and HUD elements",
+  "text.optimizationmod.category.personalization": "Personalization",
+  "text.optimizationmod.category.personalization.tooltip": "HUD size, position, font, and background",
+  "text.optimizationmod.category.colors_tab": "Colors",
+  "text.optimizationmod.category.colors_tab.tooltip": "Text and indicator colors"
 }
